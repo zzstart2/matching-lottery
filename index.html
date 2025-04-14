@@ -517,7 +517,31 @@
         window.onload = function() {
             loadRecordsFromCache();
             updateBatchButtonText();
+            applyFontSizeSettings();
         };
+        
+        // 应用字体大小设置
+        function applyFontSizeSettings() {
+            const savedSettings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {};
+            
+            if (savedSettings.fontSize) {
+                // 设置号码大小
+                if (savedSettings.fontSize.number) {
+                    const numbers = document.querySelectorAll('.number');
+                    numbers.forEach(number => {
+                        number.style.fontSize = `${savedSettings.fontSize.number / 16}rem`;
+                    });
+                }
+                
+                // 设置标签字号
+                if (savedSettings.fontSize.label) {
+                    const titles = document.querySelectorAll('.section-title');
+                    titles.forEach(title => {
+                        title.style.fontSize = `${savedSettings.fontSize.label / 16}rem`;
+                    });
+                }
+            }
+        }
         
         // 从缓存加载记录
         function loadRecordsFromCache() {
@@ -602,9 +626,10 @@
             const maleNumber = document.getElementById('male-number');
             const resultContainer = document.getElementById('result-container');
             const resultText = document.getElementById('result-text');
-            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {
-                femaleRange: { min: 1, max: 103 },
-                maleRange: { min: 1, max: 73 }
+            const savedSettings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {};
+            const settings = {
+                femaleRange: savedSettings.femaleRange || { min: 1, max: 103 },
+                maleRange: savedSettings.maleRange || { min: 1, max: 73 }
             };
             
             switch (state.step) {
@@ -808,19 +833,20 @@
         function handleBatchButtonClick() {
             if (state.rolling) return; // 如果正在滚动中则忽略
             
-            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {
-                femaleRange: { min: 1, max: 103 },
-                maleRange: { min: 1, max: 73 },
-                batchCount: 3
+            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {};
+            const batchSettings = {
+                femaleRange: settings.femaleRange || { min: 1, max: 103 },
+                maleRange: settings.maleRange || { min: 1, max: 73 },
+                batchCount: settings.batchCount || 3
             };
             
             // 获取未使用的可用号码范围
-            const availableFemale = getAvailableNumbers(settings.femaleRange.min, settings.femaleRange.max, usedFemaleNumbers);
-            const availableMale = getAvailableNumbers(settings.maleRange.min, settings.maleRange.max, usedMaleNumbers);
+            const availableFemale = getAvailableNumbers(batchSettings.femaleRange.min, batchSettings.femaleRange.max, usedFemaleNumbers);
+            const availableMale = getAvailableNumbers(batchSettings.maleRange.min, batchSettings.maleRange.max, usedMaleNumbers);
             
             // 检查是否有足够的可用号码
-            if (availableFemale.length < settings.batchCount || availableMale.length < settings.batchCount) {
-                alert(`可用号码不足，无法一次抽取${settings.batchCount}组！\n女生号码剩余: ${availableFemale.length}\n男生号码剩余: ${availableMale.length}`);
+            if (availableFemale.length < batchSettings.batchCount || availableMale.length < batchSettings.batchCount) {
+                alert(`可用号码不足，无法一次抽取${batchSettings.batchCount}组！\n女生号码剩余: ${availableFemale.length}\n男生号码剩余: ${availableMale.length}`);
                 return;
             }
             
@@ -835,10 +861,10 @@
             const tempUsedFemale = new Set([...usedFemaleNumbers]);
             const tempUsedMale = new Set([...usedMaleNumbers]);
             
-            for (let i = 0; i < settings.batchCount; i++) {
+            for (let i = 0; i < batchSettings.batchCount; i++) {
                 // 获取当前可用号码
-                const currentAvailableFemale = getAvailableNumbers(settings.femaleRange.min, settings.femaleRange.max, tempUsedFemale);
-                const currentAvailableMale = getAvailableNumbers(settings.maleRange.min, settings.maleRange.max, tempUsedMale);
+                const currentAvailableFemale = getAvailableNumbers(batchSettings.femaleRange.min, batchSettings.femaleRange.max, tempUsedFemale);
+                const currentAvailableMale = getAvailableNumbers(batchSettings.maleRange.min, batchSettings.maleRange.max, tempUsedMale);
                 
                 // 随机选择号码
                 const femaleIndex = Math.floor(Math.random() * currentAvailableFemale.length);
@@ -920,10 +946,9 @@
         
         // 更新批量按钮文本
         function updateBatchButtonText() {
-            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {
-                batchCount: 3
-            };
-            document.getElementById('batch-button').textContent = `抽${settings.batchCount}组`;
+            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {};
+            const batchCount = settings.batchCount || 3;
+            document.getElementById('batch-button').textContent = `抽${batchCount}组`;
         }
     </script>
 </body>
