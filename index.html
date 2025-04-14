@@ -335,13 +335,14 @@
             padding: 10px 20px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.9);
-            min-width: 150px;
+            min-width: 200px;
             text-align: center;
             flex: a 1 auto;
             margin: 10px auto;
             display: inline-block;
             font-weight: 700;
             color: #333;
+            white-space: nowrap;
         }
         
         /* 记录列表样式 */
@@ -827,7 +828,7 @@
                         resultText.innerHTML = `
                         <div class="batch-results">
                             <div class="batch-result-item">
-                                ${state.selectedFemale}<span style="color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${state.selectedMale}
+                                ${state.selectedFemale}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${state.selectedMale}
                             </div>
                         </div>`;
                         
@@ -1047,7 +1048,7 @@
                     
                     // 添加到最终结果HTML，使用更清晰的样式
                     resultHTML += `<div class="batch-result-item">
-                        ${match.female}<span style="color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${match.male}
+                        ${match.female}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${match.male}
                     </div>`;
                     
                     // 添加到抽取记录
