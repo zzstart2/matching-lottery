@@ -1091,6 +1091,38 @@
             batchButton.disabled = true;
             controlButton.disabled = true;
             
+            // 模拟快速滚动显示
+            let batchIndex = 0;
+            const femaleNumber = document.getElementById('female-number');
+            const maleNumber = document.getElementById('male-number');
+            const resultContainer = document.getElementById('result-container');
+            
+            // 为每个抽取项添加滚动效果
+            function startRollingNumbers(onComplete) {
+                let rollingInterval = setInterval(() => {
+                    // 获取所有未使用的号码范围（不考虑本次批量已选的号码）
+                    const availableFemale = getAvailableNumbers(batchSettings.femaleRange.min, batchSettings.femaleRange.max, usedFemaleNumbers);
+                    const availableMale = getAvailableNumbers(batchSettings.maleRange.min, batchSettings.maleRange.max, usedMaleNumbers);
+                    
+                    // 随机选择号码
+                    const randomFemale = availableFemale[Math.floor(Math.random() * availableFemale.length)];
+                    const randomMale = availableMale[Math.floor(Math.random() * availableMale.length)];
+                    
+                    // 显示当前随机号码
+                    femaleNumber.textContent = formatNumberToThreeDigits(randomFemale);
+                    maleNumber.textContent = formatNumberToThreeDigits(randomMale);
+                }, 50);
+                
+                // 1秒后停止滚动并显示实际结果
+                setTimeout(() => {
+                    clearInterval(rollingInterval);
+                    onComplete();
+                }, 1000);
+            }
+            
+            // 初始化结果文本：使用表格样式布局
+            let resultHTML = '<div class="batch-results">';
+            
             // 生成随机组合
             const matches = [];
             const tempUsedFemale = new Set([...usedFemaleNumbers]);
@@ -1119,42 +1151,37 @@
                 });
             }
             
-            // 模拟快速滚动显示
-            let batchIndex = 0;
-            const femaleNumber = document.getElementById('female-number');
-            const maleNumber = document.getElementById('male-number');
-            const resultContainer = document.getElementById('result-container');
-            
-            // 初始化结果文本：使用表格样式布局
-            let resultHTML = '<div class="batch-results">';
-            
             // 滚动显示
-            const displayNextMatch = () => {
+            function displayNextMatch() {
                 if (batchIndex < matches.length) {
                     const match = matches[batchIndex];
                     
-                    // 显示当前号码
-                    femaleNumber.textContent = formatNumberToThreeDigits(match.female);
-                    maleNumber.textContent = formatNumberToThreeDigits(match.male);
-                    
-                    // 添加到最终结果HTML，使用更清晰的样式
-                    resultHTML += `<div class="batch-result-item">
-                        ${formatNumberToThreeDigits(match.female)}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${formatNumberToThreeDigits(match.male)}
-                    </div>`;
-                    
-                    // 添加到抽取记录
-                    usedFemaleNumbers.add(match.female);
-                    usedMaleNumbers.add(match.male);
-                    matchRecords.push({
-                        female: match.female,
-                        male: match.male,
-                        timestamp: new Date().getTime()
+                    // 启动滚动效果，完成后继续下一对
+                    startRollingNumbers(() => {
+                        // 显示当前固定号码结果
+                        femaleNumber.textContent = formatNumberToThreeDigits(match.female);
+                        maleNumber.textContent = formatNumberToThreeDigits(match.male);
+                        
+                        // 添加到最终结果HTML
+                        resultHTML += `<div class="batch-result-item">
+                            ${formatNumberToThreeDigits(match.female)}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${formatNumberToThreeDigits(match.male)}
+                        </div>`;
+                        
+                        // 添加到抽取记录
+                        usedFemaleNumbers.add(match.female);
+                        usedMaleNumbers.add(match.male);
+                        matchRecords.push({
+                            female: match.female,
+                            male: match.male,
+                            timestamp: new Date().getTime()
+                        });
+                        
+                        // 处理下一对
+                        batchIndex++;
+                        setTimeout(displayNextMatch, 300);
                     });
-                    
-                    batchIndex++;
-                    setTimeout(displayNextMatch, 300); // 每300ms显示一对，加快抽取速度
                 } else {
-                    // 所有结果显示完毕
+                    // 所有结果显示完毕，收尾工作
                     resultHTML += '</div>';
                     
                     // 保存并显示记录
@@ -1175,7 +1202,7 @@
                     // 显示重新开始按钮
                     document.getElementById('reset-button').style.display = 'inline-block';
                 }
-            };
+            }
             
             // 开始显示
             displayNextMatch();
