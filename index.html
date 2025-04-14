@@ -160,6 +160,25 @@
                 justify-content: center;
                 align-items: center;
                 margin-top: 60px;
+                gap: 20px;
+            }
+            
+            /* 重新开始按钮样式 */
+            .reset-button {
+                font-size: 1.8rem;
+                padding: 15px 0;
+                margin-top: 0;
+                border-radius: 50px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                font-weight: 600;
+                width: 200px;
+                text-align: center;
+                transition: background-color 0.3s;
+                display: none;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                cursor: pointer;
             }
             
             /* 结果容器调整，避免影响布局 */
@@ -316,6 +335,7 @@
             
             <div class="controls">
                 <button id="control-button" class="control-button" onclick="handleControlButtonClick()">开始</button>
+                <button id="reset-button" class="reset-button" onclick="resetAll()" style="display: none;">重新开始</button>
             </div>
         </main>
 
@@ -423,7 +443,10 @@
                         
                         // 恢复按钮状态
                         controlButton.disabled = false;
-                        controlButton.textContent = '重新开始';
+                        controlButton.textContent = '再抽一对';
+                        
+                        // 显示重新开始按钮
+                        document.getElementById('reset-button').style.display = 'inline-block';
                     }, 1000);
                     break;
                     
@@ -471,6 +494,33 @@
             
             // 刷新页面以应用设置
             location.reload();
+        }
+        
+        // 重新初始化整个程序
+        function resetAll() {
+            // 清除状态
+            state = {
+                rolling: false,
+                rollInterval: null,
+                selectedFemale: null,
+                selectedMale: null,
+                step: 0
+            };
+            
+            // 重置UI
+            const femaleNumber = document.getElementById('female-number');
+            const maleNumber = document.getElementById('male-number');
+            const resultContainer = document.getElementById('result-container');
+            const controlButton = document.getElementById('control-button');
+            
+            femaleNumber.textContent = '1';
+            maleNumber.textContent = '1';
+            document.querySelector('.lottery-container').style.opacity = '1';
+            resultContainer.style.display = 'none';
+            
+            // 重置按钮
+            controlButton.textContent = '开始';
+            document.getElementById('reset-button').style.display = 'none';
         }
     </script>
 </body>
