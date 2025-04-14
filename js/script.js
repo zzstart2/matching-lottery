@@ -9,8 +9,9 @@ const settingsButton = document.getElementById('settings-button');
 const settingsPanel = document.getElementById('settings-panel');
 const saveSettingsButton = document.getElementById('save-settings');
 const cancelSettingsButton = document.getElementById('cancel-settings');
-const historyList = document.getElementById('history-list');
-const resetHistoryButton = document.getElementById('reset-history');
+// 历史记录元素会在init函数中重新获取，因为可能会动态创建
+let historyList = null;
+let resetHistoryButton = null;
 
 // 设置表单元素
 const femaleMinInput = document.getElementById('female-min');
@@ -69,6 +70,19 @@ function init() {
         saveHistory();
     }
     
+    console.log('历史记录数据:', pairingHistory);
+    
+    applySettings();
+    
+    // 立即创建历史记录容器
+    console.log('正在创建历史记录容器...');
+    const container = ensureHistoryContainer();
+    console.log('历史记录容器创建完成:', container);
+    
+    // 重新获取可能由ensureHistoryContainer动态创建的历史记录元素
+    historyList = document.getElementById('history-list');
+    resetHistoryButton = document.getElementById('reset-history');
+    
     // 检查所有关键DOM元素
     const domElements = {
         femaleNumber,
@@ -85,8 +99,6 @@ function init() {
         resetHistoryButton
     };
     
-    console.log('历史记录数据:', pairingHistory);
-    
     // 检查DOM元素是否正确加载
     Object.entries(domElements).forEach(([name, element]) => {
         console.log(`DOM元素 ${name}: ${element ? '已找到' : '未找到'}`);
@@ -96,16 +108,7 @@ function init() {
     const historyContainer = document.querySelector('.history-container');
     console.log('历史记录容器元素:', historyContainer ? '已找到' : '未找到');
     
-    if (!historyContainer) {
-        console.warn('历史记录容器不存在，将在更新历史记录时创建');
-    }
-    
-    applySettings();
     bindEvents();
-    
-    // 立即创建历史记录容器
-    const container = ensureHistoryContainer();
-    console.log('确保历史记录容器存在:', container);
     
     // 延迟执行历史记录显示，确保DOM已完全加载
     setTimeout(() => {
@@ -200,28 +203,56 @@ function applySettings() {
 
 // 绑定事件
 function bindEvents() {
+    console.log('正在绑定事件...');
+    
+    // 基本按钮事件
     controlButton.addEventListener('click', handleControlButton);
     settingsButton.addEventListener('click', showSettings);
     saveSettingsButton.addEventListener('click', handleSaveSettings);
     cancelSettingsButton.addEventListener('click', hideSettings);
-    resetHistoryButton.addEventListener('click', resetHistory);
+    
+    // 历史记录重置按钮事件（仅当按钮存在时）
+    if (resetHistoryButton) {
+        console.log('绑定历史记录重置按钮事件');
+        resetHistoryButton.addEventListener('click', resetHistory);
+    } else {
+        console.warn('历史记录重置按钮不存在，无法绑定事件');
+    }
     
     // 防止表单提交刷新页面
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', e => e.preventDefault());
     });
+    
+    console.log('事件绑定完成');
 }
 
 // 重置历史记录
 function resetHistory() {
+    console.log('尝试重置历史记录');
+    
     if (confirm('确定要清除所有配对记录吗？')) {
         pairingHistory = [];
         pairedNumbers = { female: [], male: [] };
         saveHistory();
+        
+        // 确保historyList存在
+        if (!historyList) {
+            console.log('重置历史记录时historyList不存在，尝试重新获取');
+            const container = ensureHistoryContainer();
+            historyList = document.getElementById('history-list');
+            if (!historyList) {
+                console.error('无法获取历史记录列表元素');
+                return;
+            }
+        }
+        
         updateHistoryDisplay();
         
         // 重置抽奖状态
         resetState();
+        
+        console.log('历史记录已重置');
     }
 }
 
@@ -331,6 +362,22 @@ function updateHistoryDisplay() {
     
     // 确保历史记录容器可见
     historyContainer.style.display = 'block';
+    
+    // 重新获取历史列表元素，以防之前未正确获取
+    if (!historyList) {
+        console.log('historyList不存在，尝试重新获取');
+        historyList = document.getElementById('history-list');
+        if (!historyList) {
+            console.error('无法获取历史记录列表元素，创建新元素');
+            historyList = document.createElement('div');
+            historyList.id = 'history-list';
+            historyList.className = 'history-list';
+            historyList.style.display = 'flex';
+            historyList.style.flexDirection = 'column';
+            historyList.style.gap = '10px';
+            historyContainer.appendChild(historyList);
+        }
+    }
     
     // 更新历史记录列表
     historyList.innerHTML = '';
