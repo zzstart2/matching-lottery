@@ -64,9 +64,25 @@
             top: 15px;
             right: 15px;
             display: flex;
-            gap: 15px;
+            gap: 30px;
         }
         
+        /* 设置按钮定位方式改为相对固定位置 */
+        #records-button {
+            position: absolute;
+            right: 180px;
+            width: 120px;
+            text-align: center;
+        }
+        
+        #settings-button {
+            position: absolute;
+            right: 40px;
+            width: 120px;
+            text-align: center;
+        }
+        
+        /* 设置按钮基本样式 */
         .settings-button {
             background-color: rgba(255, 255, 255, 0.5);
             color: #555;
@@ -172,20 +188,20 @@
             margin: 0 10px !important;
             backdrop-filter: blur(5px) !important;
             border: none !important;
-            color: #333 !important;
+            color: white !important;
             line-height: 60px !important;
         }
         
         .white-button {
-            background-color: white !important;
-            color: #333 !important;
+            background-color: #4785ba !important;
+            color: white !important;
             text-shadow: none !important;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
         }
         
         .batch-button {
-            background: linear-gradient(45deg, #ff4d7e, #4785ba);
-            color: white;
+            background: linear-gradient(45deg, #ff4d7e, #4785ba) !important;
+            color: white !important;
         }
         
         .control-button:hover {
@@ -215,21 +231,20 @@
         
         /* 结果容器样式 */
         .result-container {
-            height: 80%;
             position: fixed;
+            width: 60%;
+            height: auto;
+            max-height: 80vh;
+            left: 20%;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
+            transform: translateY(-50%);
+            border-radius: 20px;
+            background-color: white;
+            z-index: 1000;
+            padding: 30px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            overflow-y: auto;
-            z-index: 1000;
-            padding: 20px;
-            background: white;
-            border-radius: 20px;
         }
         
         .result-title {
@@ -244,16 +259,20 @@
         }
         
         .result-content {
-            width: 80%;
-            height: 80%;
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: auto;
         }
         
         .result-text {
-            font-size: 3.2rem;
+            font-size: 4.5rem;
             font-weight: bold;
             color: #333;
             width: 100%;
@@ -261,13 +280,15 @@
         }
         
         .result-actions {
-            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+            gap: 30px;
+            position: sticky;
+            bottom: 0;
+            background-color: transparent;
+            padding: 15px 0;
         }
         
         .result-close-btn, .result-clear-btn {
@@ -300,24 +321,26 @@
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             justify-content: center;
             align-items: center;
+            justify-items: center;
             width: 100%;
             max-height: 70vh;
             overflow-y: auto;
-            gap: 15px;
-            padding: 10px;
+            gap: 20px;
+            padding: 20px;
+            margin: 0 auto;
         }
         
         .batch-result-item {
-            font-size: 2.2rem;
-            padding: 6px 14px;
+            font-size: 3.2rem;
+            padding: 10px 20px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.9);
-            min-width: 120px;
+            min-width: 150px;
             text-align: center;
             flex: a 1 auto;
-            margin: 6px;
+            margin: 10px auto;
             display: inline-block;
-            font-weight: 600;
+            font-weight: 700;
             color: #333;
         }
         
@@ -398,7 +421,8 @@
             height: auto;
             max-height: 80vh;
             left: 20%;
-            top: 5vh;
+            top: 50%;
+            transform: translateY(-50%);
             border-radius: 20px;
             background-color: white;
             z-index: 1000;
@@ -411,6 +435,12 @@
         .settings-title {
             font-size: 3.5rem !important;
             margin-bottom: 40px;
+            font-weight: bold;
+            color: #333;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
         }
         
         .settings-group {
@@ -500,8 +530,8 @@
                 <div class="result-text" id="result-text"></div>
                 </div>
                 <div class="result-actions">
-                    <button class="result-clear-btn" onclick="handleControlButtonClick()">再次抽取</button>
-                    <button class="result-close-btn" onclick="closeResultModal()">关闭</button>
+                    <button class="cancel-button" onclick="handleControlButtonClick()">再次抽取</button>
+                    <button class="save-button" onclick="closeResultModal()">关闭</button>
                 </div>
             </div>
             
