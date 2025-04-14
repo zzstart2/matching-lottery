@@ -121,7 +121,7 @@
         
         /* 整体背景样式 */
         body {
-            background: url('https://i.imgur.com/nxaozIf.jpg') no-repeat center center fixed;
+            background: url('https://static.vecteezy.com/system/resources/previews/014/815/774/non_2x/spring-cherry-blossom-background-and-spring-season-free-vector.jpg') no-repeat center center fixed;
             background-size: cover;
             padding: 0;
             margin: 0;
@@ -153,8 +153,8 @@
                 flex-direction: column;
                 justify-content: center;
                 border-radius: 20px;
-                box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
-                background-color: rgba(255, 255, 255, 0.85);
+                box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+                background-color: transparent;
                 padding: 20px;
                 position: relative;
                 z-index: 10;
@@ -177,14 +177,18 @@
                 padding: 8px 15px;
                 font-size: 16px;
                 border-radius: 5px;
-                background-color: #f0f0f0;
-                border: 1px solid #ddd;
+                background-color: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(5px);
+                border: none;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                 transition: all 0.3s;
                 z-index: 100;
             }
             
             .settings-button:hover {
-                background-color: #e0e0e0;
+                background-color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
             }
             
             /* 抽奖容器横向布局调整 */
@@ -210,11 +214,13 @@
             }
             
             .female-section {
-                background-color: rgba(255, 182, 193, 0.4);
+                background-color: rgba(255, 182, 193, 0.7);
+                backdrop-filter: blur(5px);
             }
             
             .male-section {
-                background-color: rgba(135, 206, 235, 0.4);
+                background-color: rgba(135, 206, 235, 0.7);
+                backdrop-filter: blur(5px);
             }
             
             /* 号码显示调整 */
@@ -254,15 +260,24 @@
                 padding: 20px 0;
                 margin-top: 0;
                 border-radius: 50px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                 font-weight: 600;
                 letter-spacing: 5px;
                 width: 230px;
                 position: relative;
                 text-align: center;
-                transition: background-color 0.3s;
+                transition: all 0.3s;
                 display: inline-block;
                 margin: 0 10px;
+                backdrop-filter: blur(5px);
+                border: none;
+                background-color: rgba(255, 255, 255, 0.8);
+                color: #333;
+            }
+            
+            .control-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
             }
             
             .batch-button {
@@ -558,10 +573,15 @@
             font-size: 1.5rem;
             text-align: center;
             margin: 0 0 15px 0;
-            color: #ff4d7e;
+            color: white;
             font-weight: bold;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 10px 20px;
+            border-radius: 15px;
+            background-color: rgba(255, 77, 126, 0.8);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            display: inline-block;
+            align-self: center;
         }
         
         /* 记录列表容器 */
