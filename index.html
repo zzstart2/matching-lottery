@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相亲活动摇号系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">相亲活动摇号系统</h1>
+            <button id="settings-button" class="settings-button">设置</button>
+        </header>
+
+        <main id="main-content">
+            <div class="lottery-container">
+                <div class="female-section">
+                    <h2 class="section-title female-color">女生号码</h2>
+                    <div class="number female-number" id="female-number">1</div>
+                </div>
+                
+                <div class="male-section">
+                    <h2 class="section-title male-color">男生号码</h2>
+                    <div class="number male-number" id="male-number">1</div>
+                </div>
+            </div>
+
+            <div class="result-container" id="result-container" style="display: none;">
+                <div class="result-text" id="result-text"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="control-button" class="control-button">开始</button>
+            </div>
+        </main>
+
+        <div id="settings-panel" class="settings-panel" style="display: none;">
+            <h2 class="settings-title">设置</h2>
+            
+            <div class="settings-group">
+                <div class="settings-item">
+                    <label>女生号码范围</label>
+                    <div class="range-inputs">
+                        <input type="number" id="female-min" min="1" value="1">
+                        <span class="range-separator">到</span>
+                        <input type="number" id="female-max" min="1" value="103">
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <label>男生号码范围</label>
+                    <div class="range-inputs">
+                        <input type="number" id="male-min" min="1" value="1">
+                        <span class="range-separator">到</span>
+                        <input type="number" id="male-max" min="1" value="73">
+                    </div>
+                </div>
+                
+                <div class="settings-item">
+                    <label>标题字号</label>
+                    <input type="number" id="title-size" min="16" max="72" value="48">
+                </div>
+                
+                <div class="settings-item">
+                    <label>数字字号</label>
+                    <input type="number" id="number-size" min="16" max="160" value="80">
+                </div>
+                
+                <div class="settings-item">
+                    <label>标签字号</label>
+                    <input type="number" id="label-size" min="12" max="48" value="28">
+                </div>
+            </div>
+            
+            <div class="settings-buttons">
+                <button id="save-settings" class="save-button">保存并返回</button>
+                <button id="cancel-settings" class="cancel-button">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 

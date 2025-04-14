@@ -1,0 +1,317 @@
+/* 基本样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: linear-gradient(to bottom, #ffdbea, #cee5ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 1000px;
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+/* 头部样式 */
+header {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    text-align: center;
+}
+
+.settings-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.settings-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* 主内容区域样式 */
+main {
+    padding: 20px;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.lottery-container {
+    display: flex;
+    justify-content: space-between;
+    height: 70%;
+}
+
+.female-section, .male-section {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.female-section {
+    background-color: rgba(255, 182, 193, 0.3);
+}
+
+.male-section {
+    background-color: rgba(135, 206, 235, 0.3);
+}
+
+.section-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.female-color {
+    color: #ff4d7e;
+}
+
+.male-color {
+    color: #4785ba;
+}
+
+.number {
+    font-size: 80px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.female-number {
+    color: #ff4d7e;
+}
+
+.male-number {
+    color: #4785ba;
+}
+
+/* 结果显示区域 */
+.result-container {
+    text-align: center;
+    margin: 20px 0;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-text {
+    font-size: 60px;
+    font-weight: bold;
+    color: #333;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* 控制按钮样式 */
+.controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.control-button {
+    background: linear-gradient(to right, #ff4d7e, #4785ba);
+    border: none;
+    color: white;
+    padding: 12px 40px;
+    font-size: 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.control-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.control-button:active {
+    transform: translateY(-1px);
+}
+
+/* 设置面板样式 */
+.settings-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 10;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.settings-title {
+    font-size: 36px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.settings-item label {
+    font-size: 18px;
+    color: #555;
+}
+
+.settings-item input {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-separator {
+    font-size: 16px;
+    color: #777;
+}
+
+.settings-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.save-button, .cancel-button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.save-button {
+    background-color: #4785ba;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #ddd;
+    color: #555;
+}
+
+.save-button:hover {
+    background-color: #3a6f9e;
+}
+
+.cancel-button:hover {
+    background-color: #ccc;
+}
+
+/* 适配移动设备 */
+@media (max-width: 1000px) {
+    .container {
+        width: 95%;
+        height: auto;
+        min-height: 80vh;
+    }
+    
+    .lottery-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .female-section, .male-section {
+        width: 100%;
+    }
+    
+    .number {
+        width: 120px;
+        height: 120px;
+        font-size: 60px;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.female-section, .male-section {
+    animation: slideIn 0.5s ease-out;
+}
+
+.result-container {
+    animation: fadeIn 0.8s ease-out;
+} 
