@@ -22,6 +22,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            font-family: 'Noto Sans SC', sans-serif;
         }
         
         #main-content {
@@ -102,7 +103,7 @@
         
         /* 主内容区域 */
         main {
-            margin-top: 180px;
+            margin-top: 120px;
             position: relative;
             width: 100%;
             display: flex;
@@ -116,49 +117,99 @@
         .lottery-container {
             display: flex;
             justify-content: center;
-            gap: 15%;
+            gap: 10%;
             margin: 0 auto;
             width: 100%;
             height: 80%;
+            padding-top: 40px;
         }
         
         /* 女生和男生区域样式 */
         .female-section, .male-section {
-            width: 35%;
+            width: 40%;
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 80px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
         .female-section {
-            background-color: rgba(255, 182, 193, 0.7);
-            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.85);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+        
+        .female-section::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            bottom: -3px;
+            left: -3px;
+            z-index: -1;
+            border-radius: 80px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
         }
         
         .male-section {
-            background-color: rgba(135, 206, 235, 0.7);
-            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.85);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+        
+        .male-section::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            bottom: -3px;
+            left: -3px;
+            z-index: -1;
+            border-radius: 80px;
+            background: linear-gradient(to right, #84fab0, #8fd3f4);
         }
         
         /* 号码显示样式 */
         .number {
             width: 250px;
-            height: 250px;
-            line-height: 250px;
+            height: 200px;
+            line-height: 200px;
             font-size: 8rem !important;
             font-weight: 700;
-            margin: 30px auto;
+            margin: 20px auto;
             text-align: center;
+            color: white;
+            background-clip: text;
+            -webkit-background-clip: text;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .female-number {
+            color: #ff9a9e;
+        }
+        
+        .male-number {
+            color: #8fd3f4;
         }
         
         /* 分区标题样式 */
         .section-title {
             font-size: 2.5rem !important;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-weight: 700;
+            color: #666;
+        }
+        
+        .female-color {
+            color: #ff7b8a;
+        }
+        
+        .male-color {
+            color: #4a9dcf;
         }
         
         /* 控制按钮样式 */
@@ -332,17 +383,19 @@
         
         .batch-result-item {
             font-size: 3.2rem;
-            padding: 10px 20px;
+            padding: 15px 30px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.9);
-            min-width: 200px;
+            min-width: 220px;
             text-align: center;
             flex: a 1 auto;
-            margin: 10px auto;
+            margin: 15px auto;
             display: inline-block;
             font-weight: 700;
             color: #333;
             white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 77, 126, 0.3);
         }
         
         /* 记录列表样式 */
@@ -500,6 +553,20 @@
             background-color: #f44336;
             color: white;
         }
+        
+            font-size: 3.5rem;
+            text-align: center;
+            background: linear-gradient(to right, #ff7b8a, #4a9dcf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-top: 10px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: absolute;
+            top: 80px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -515,13 +582,13 @@
         <main id="main-content">
             <div class="lottery-container">
                 <div class="female-section">
-                    <h2 class="section-title female-color">女生号码</h2>
-                    <div class="number female-number" id="female-number">1</div>
+                    <h2 class="section-title female-color">女嘉宾</h2>
+                    <div class="number female-number" id="female-number">001</div>
                 </div>
                 
                 <div class="male-section">
-                    <h2 class="section-title male-color">男生号码</h2>
-                    <div class="number male-number" id="male-number">1</div>
+                    <h2 class="section-title male-color">男嘉宾</h2>
+                    <div class="number male-number" id="male-number">001</div>
                 </div>
             </div>
 
@@ -744,7 +811,7 @@
                 const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
                 
                 recordItem.innerHTML = `
-                    <div>${record.female} <span class="record-heart">❤</span> ${record.male}</div>
+                    <div>${formatNumberToThreeDigits(record.female)} <span class="record-heart">❤</span> ${formatNumberToThreeDigits(record.male)}</div>
                     <div class="record-time">${dateStr}</div>
                 `;
                 rowWrapper.appendChild(recordItem);
@@ -800,8 +867,9 @@
                         const femaleRandomNumber = availableFemale[Math.floor(Math.random() * availableFemale.length)];
                         const maleRandomNumber = availableMale[Math.floor(Math.random() * availableMale.length)];
                         
-                        femaleNumber.textContent = femaleRandomNumber;
-                        maleNumber.textContent = maleRandomNumber;
+                        // 格式化为三位数
+                        femaleNumber.textContent = formatNumberToThreeDigits(femaleRandomNumber);
+                        maleNumber.textContent = formatNumberToThreeDigits(maleRandomNumber);
                     }, 50);
                     break;
                     
@@ -828,7 +896,7 @@
                         resultText.innerHTML = `
                         <div class="batch-results">
                             <div class="batch-result-item">
-                                ${state.selectedFemale}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${state.selectedMale}
+                                ${formatNumberToThreeDigits(state.selectedFemale)}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${formatNumberToThreeDigits(state.selectedMale)}
                             </div>
                         </div>`;
                         
@@ -851,6 +919,9 @@
                         // 保存并显示记录
                         saveRecordsToCache();
                         renderRecords();
+                        
+                        // 动态调整标签大小
+                        adjustBatchResultItemSize(1);
                     }, 1000);
                     break;
                     
@@ -918,8 +989,8 @@
             const resultContainer = document.getElementById('result-container');
             const controlButton = document.getElementById('control-button');
             
-            femaleNumber.textContent = '1';
-            maleNumber.textContent = '1';
+            femaleNumber.textContent = '001';
+            maleNumber.textContent = '001';
             resultContainer.style.display = 'none';
             
             // 重置按钮
@@ -962,8 +1033,8 @@
                 const resultContainer = document.getElementById('result-container');
                 const controlButton = document.getElementById('control-button');
                 
-                femaleNumber.textContent = '1';
-                maleNumber.textContent = '1';
+                femaleNumber.textContent = '001';
+                maleNumber.textContent = '001';
                 resultContainer.style.display = 'none';
                 document.getElementById('records-container').style.display = 'none';
                 
@@ -1048,7 +1119,7 @@
                     
                     // 添加到最终结果HTML，使用更清晰的样式
                     resultHTML += `<div class="batch-result-item">
-                        ${match.female}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${match.male}
+                        ${formatNumberToThreeDigits(match.female)}<span style="display:inline-block; color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${formatNumberToThreeDigits(match.male)}
                     </div>`;
                     
                     // 添加到抽取记录
@@ -1073,6 +1144,9 @@
                     // 显示结果容器
                     resultContainer.style.display = 'flex';
                     document.getElementById('result-text').innerHTML = resultHTML;
+                    
+                    // 动态调整标签大小
+                    adjustBatchResultItemSize(matches.length);
                     
                     // 恢复按钮状态
                     batchButton.disabled = false;
@@ -1127,6 +1201,51 @@
                     document.getElementById('batch-button').textContent = `抽${settings.batchCount}组`;
                 }
             }
+        }
+
+        // 动态调整标签大小
+        function adjustBatchResultItemSize(matchCount) {
+            const batchResults = document.querySelector('.batch-results');
+            if (batchResults) {
+                const batchResultItems = batchResults.querySelectorAll('.batch-result-item');
+                
+                // 根据结果数量动态调整字体大小和内边距
+                let fontSize, padding, minWidth;
+                
+                if (matchCount <= 1) {
+                    // 单个结果时使用最大尺寸
+                    fontSize = 4.5;
+                    padding = "20px 40px";
+                    minWidth = "260px";
+                } else if (matchCount <= 3) {
+                    // 2-3个结果使用较大尺寸
+                    fontSize = 3.8;
+                    padding = "18px 35px";
+                    minWidth = "240px";
+                } else if (matchCount <= 6) {
+                    // 4-6个结果使用中等尺寸
+                    fontSize = 3.2;
+                    padding = "15px 30px";
+                    minWidth = "220px";
+                } else {
+                    // 7个及以上结果使用较小尺寸
+                    fontSize = 2.8;
+                    padding = "12px 25px";
+                    minWidth = "200px";
+                }
+                
+                // 应用样式到所有结果项
+                batchResultItems.forEach(item => {
+                    item.style.fontSize = `${fontSize}rem`;
+                    item.style.padding = padding;
+                    item.style.minWidth = minWidth;
+                });
+            }
+        }
+        
+        // 辅助函数：将数字格式化为三位数
+        function formatNumberToThreeDigits(number) {
+            return number.toString().padStart(3, '0');
         }
     </script>
 </body>
