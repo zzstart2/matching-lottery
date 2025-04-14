@@ -397,4 +397,59 @@ main {
     font-weight: bold;
     margin-left: 5px;
     font-size: 18px;
+}
+
+/* 针对10:4超宽屏幕比例的额外媒体查询 */
+@media (min-aspect-ratio: 10/4) {
+    body {
+        background: linear-gradient(to right, #ffdbea, #cee5ff);
+    }
+    
+    .settings-panel {
+        width: 50%;
+        height: 90vh;
+        top: 5vh;
+        left: 25%;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .settings-title {
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .settings-group {
+        max-width: 80%;
+        margin: 0 auto;
+    }
+    
+    .settings-item {
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+    }
+    
+    .settings-item input {
+        width: 120px;
+        padding: 12px;
+        font-size: 1.3rem;
+    }
+    
+    .range-inputs {
+        gap: 1.5rem;
+    }
+    
+    .range-separator {
+        font-size: 1.3rem;
+    }
+    
+    .settings-buttons {
+        margin-top: 4rem;
+    }
+    
+    .save-button, .cancel-button {
+        padding: 15px 40px;
+        font-size: 1.5rem;
+        border-radius: 8px;
+    }
 } 

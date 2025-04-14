@@ -20,6 +20,65 @@
             margin-top: 20px;
             padding-bottom: 40px; /* 添加底部间距 */
         }
+        
+        /* 针对10:4屏幕比例的特殊样式 */
+        @media (min-aspect-ratio: 10/4) {
+            /* 整体容器调整 */
+            .container {
+                max-width: 80%;
+                margin: 0 auto;
+                height: 90vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            /* 抽奖容器横向布局调整 */
+            .lottery-container {
+                display: flex;
+                justify-content: center;
+                gap: 10%;
+                margin: 0 auto;
+                width: 90%;
+            }
+            
+            /* 女生和男生区域尺寸调整 */
+            .female-section, .male-section {
+                width: 30%;
+                padding: 30px;
+            }
+            
+            /* 号码显示调整 */
+            .number {
+                width: 200px;
+                height: 200px;
+                font-size: 6rem !important;
+            }
+            
+            /* 标题调整 */
+            .title {
+                font-size: 3.5rem !important;
+                margin-bottom: 30px;
+            }
+            
+            /* 分区标题调整 */
+            .section-title {
+                font-size: 2rem !important;
+                margin-bottom: 30px;
+            }
+            
+            /* 控制按钮调整 */
+            .control-button {
+                font-size: 2rem;
+                padding: 15px 60px;
+                margin-top: 40px;
+            }
+            
+            /* 结果显示调整 */
+            .result-text {
+                font-size: 5rem !important;
+            }
+        }
     </style>
 </head>
 <body>
