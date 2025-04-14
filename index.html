@@ -165,9 +165,10 @@
             
             /* 设置面板调整 */
             .settings-panel {
-                position: absolute;
+                position: fixed;
                 width: 70%;
-                height: 80vh;
+                height: auto;
+                max-height: 80vh;
                 left: 15%;
                 top: 10vh;
                 border-radius: 20px;
@@ -176,6 +177,8 @@
                 z-index: 1000;
                 padding: 30px;
                 overflow-y: auto;
+                display: flex;
+                flex-direction: column;
             }
             
             #settings-panel {
@@ -205,14 +208,30 @@
             }
             
             .settings-buttons {
-                margin-top: 60px;
+                margin-top: 40px;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: center;
+                gap: 30px;
             }
             
             .save-button, .cancel-button {
-                padding: 15px 50px;
-                font-size: 2rem;
+                padding: 15px 40px;
+                font-size: 1.8rem;
                 border-radius: 10px;
-                margin: 0 20px;
+                cursor: pointer;
+            }
+            
+            .save-button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+            }
+            
+            .cancel-button {
+                background-color: #f44336;
+                color: white;
+                border: none;
             }
         }
     </style>
@@ -266,11 +285,6 @@
                         <span class="range-separator">到</span>
                         <input type="number" id="male-max" min="1" value="73">
                     </div>
-                </div>
-                
-                <div class="settings-item">
-                    <label>标题字号</label>
-                    <input type="number" id="title-size" min="16" max="72" value="48">
                 </div>
                 
                 <div class="settings-item">
@@ -373,7 +387,6 @@
             const maleMin = Math.max(1, parseInt(document.getElementById('male-min').value) || 1);
             const maleMax = Math.max(maleMin, parseInt(document.getElementById('male-max').value) || 73);
             
-            const titleSize = Math.max(16, Math.min(72, parseInt(document.getElementById('title-size').value) || 48));
             const numberSize = Math.max(16, Math.min(160, parseInt(document.getElementById('number-size').value) || 80));
             const labelSize = Math.max(12, Math.min(48, parseInt(document.getElementById('label-size').value) || 28));
             
@@ -382,7 +395,6 @@
                 femaleRange: { min: femaleMin, max: femaleMax },
                 maleRange: { min: maleMin, max: maleMax },
                 fontSize: {
-                    title: titleSize,
                     number: numberSize,
                     label: labelSize
                 }
