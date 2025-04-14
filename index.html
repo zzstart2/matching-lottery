@@ -31,40 +31,13 @@
             padding: 10px 20px 40px 20px;
         }
         
-        .records-header {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 20px;
-            align-items: center;
-        }
-        
-        .records-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: #555;
-        }
-        
-        .records-reset {
-            font-size: 1.2rem;
-            color: #777;
-            background: none;
-            border: none;
-            text-decoration: underline;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-        
-        .records-reset:hover {
-            color: #f44336;
-        }
-        
         .records-list {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
             width: 100%;
+            max-width: 1000px;
         }
         
         .record-item {
@@ -83,6 +56,12 @@
         .record-heart {
             color: #ff4d7e;
             margin: 0 5px;
+        }
+        
+        /* 限制每行最多10个标签 */
+        .record-item:nth-child(10n+1) {
+            page-break-after: always;
+            break-after: always;
         }
         
         /* 针对10:4屏幕比例的特殊样式 */
@@ -422,13 +401,10 @@
             <div class="controls">
                 <button id="control-button" class="control-button" onclick="handleControlButtonClick()">开始</button>
                 <button id="reset-button" class="reset-button" onclick="resetAll()" style="display: none;">重新开始</button>
+                <button id="clear-records-button" class="reset-button" onclick="resetRecords()" style="display: none;">重置记录</button>
             </div>
             
             <div id="records-container" class="records-container" style="display: none;">
-                <div class="records-header">
-                    <span class="records-title">抽取记录</span>
-                    <button class="records-reset" onclick="resetRecords()">重置记录</button>
-                </div>
                 <div id="records-list" class="records-list"></div>
             </div>
         </main>
@@ -531,10 +507,12 @@
             
             if (matchRecords.length === 0) {
                 document.getElementById('records-container').style.display = 'none';
+                document.getElementById('clear-records-button').style.display = 'none';
                 return;
             }
             
             document.getElementById('records-container').style.display = 'flex';
+            document.getElementById('clear-records-button').style.display = 'inline-block';
             
             for (const record of matchRecords) {
                 const recordItem = document.createElement('div');
