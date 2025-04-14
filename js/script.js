@@ -52,6 +52,10 @@ let state = {
 
 // 初始化
 function init() {
+    console.log('页面初始化开始...');
+    console.log('环境:', window.location.href);
+    console.log('是否为GitHub Pages环境:', window.location.hostname.includes('github.io'));
+    
     loadSettings();
     loadHistory();
     
@@ -65,18 +69,60 @@ function init() {
         saveHistory();
     }
     
+    // 检查所有关键DOM元素
+    const domElements = {
+        femaleNumber,
+        maleNumber,
+        controlButton,
+        resultContainer,
+        resultText,
+        mainContent,
+        settingsButton,
+        settingsPanel,
+        saveSettingsButton,
+        cancelSettingsButton,
+        historyList,
+        resetHistoryButton
+    };
+    
+    console.log('历史记录数据:', pairingHistory);
+    
     // 检查DOM元素是否正确加载
-    console.log('历史记录列表元素：', historyList);
-    console.log('历史记录重置按钮：', resetHistoryButton);
+    Object.entries(domElements).forEach(([name, element]) => {
+        console.log(`DOM元素 ${name}: ${element ? '已找到' : '未找到'}`);
+    });
+    
+    // 检查历史记录容器是否存在
+    const historyContainer = document.querySelector('.history-container');
+    console.log('历史记录容器元素:', historyContainer ? '已找到' : '未找到');
+    
+    if (!historyContainer) {
+        console.warn('历史记录容器不存在，将在更新历史记录时创建');
+    }
     
     applySettings();
     bindEvents();
+    
+    // 立即创建历史记录容器
+    const container = ensureHistoryContainer();
+    console.log('确保历史记录容器存在:', container);
     
     // 延迟执行历史记录显示，确保DOM已完全加载
     setTimeout(() => {
         console.log('延迟执行更新历史记录显示');
         updateHistoryDisplay();
+        
+        // 强制显示历史记录区域
+        const historyContainerAfterUpdate = document.querySelector('.history-container');
+        if (historyContainerAfterUpdate) {
+            console.log('强制显示历史记录区域');
+            historyContainerAfterUpdate.style.display = 'block';
+            historyContainerAfterUpdate.style.visibility = 'visible';
+            historyContainerAfterUpdate.style.opacity = '1';
+        }
     }, 500);
+    
+    console.log('页面初始化完成');
 }
 
 // 加载设置
@@ -190,19 +236,56 @@ function ensureHistoryContainer() {
         historyContainer = document.createElement('div');
         historyContainer.className = 'history-container';
         
+        // 设置明确的样式，确保在所有环境中可见
+        historyContainer.style.margin = '50px 0 30px 0';
+        historyContainer.style.maxHeight = '300px';
+        historyContainer.style.overflowY = 'auto';
+        historyContainer.style.border = '2px solid #ddd';
+        historyContainer.style.borderRadius = '12px';
+        historyContainer.style.padding = '20px';
+        historyContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        historyContainer.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+        historyContainer.style.display = 'block';
+        historyContainer.style.position = 'relative';
+        historyContainer.style.zIndex = '1';
+        historyContainer.style.width = '100%';
+        historyContainer.style.visibility = 'visible';
+        historyContainer.style.opacity = '1';
+        
         // 创建标题和重置按钮区域
         const historyHeader = document.createElement('div');
         historyHeader.className = 'history-header';
+        historyHeader.style.display = 'flex';
+        historyHeader.style.justifyContent = 'space-between';
+        historyHeader.style.alignItems = 'center';
+        historyHeader.style.marginBottom = '15px';
         
         const historyTitle = document.createElement('h2');
         historyTitle.className = 'history-title';
         historyTitle.textContent = '配对历史记录';
+        historyTitle.style.fontSize = '22px';
+        historyTitle.style.color = '#333';
+        historyTitle.style.margin = '0';
         
         const resetButton = document.createElement('button');
         resetButton.id = 'reset-history';
         resetButton.className = 'reset-button';
         resetButton.textContent = '重置记录';
+        resetButton.style.backgroundColor = '#f5f5f5';
+        resetButton.style.border = '1px solid #ddd';
+        resetButton.style.color = '#555';
+        resetButton.style.padding = '5px 12px';
+        resetButton.style.fontSize = '14px';
+        resetButton.style.borderRadius = '4px';
+        resetButton.style.cursor = 'pointer';
+        resetButton.style.transition = 'all 0.2s';
         resetButton.addEventListener('click', resetHistory);
+        resetButton.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#e5e5e5';
+        });
+        resetButton.addEventListener('mouseout', function() {
+            this.style.backgroundColor = '#f5f5f5';
+        });
         
         historyHeader.appendChild(historyTitle);
         historyHeader.appendChild(resetButton);
@@ -211,6 +294,9 @@ function ensureHistoryContainer() {
         const newHistoryList = document.createElement('div');
         newHistoryList.id = 'history-list';
         newHistoryList.className = 'history-list';
+        newHistoryList.style.display = 'flex';
+        newHistoryList.style.flexDirection = 'column';
+        newHistoryList.style.gap = '10px';
         
         historyContainer.appendChild(historyHeader);
         historyContainer.appendChild(newHistoryList);
@@ -221,6 +307,15 @@ function ensureHistoryContainer() {
         // 更新全局变量
         historyList = newHistoryList;
         resetHistoryButton = resetButton;
+        
+        console.log('历史记录容器创建完成，已添加到DOM');
+    } else {
+        // 即使容器已存在，也应用样式以确保可见
+        historyContainer.style.display = 'block';
+        historyContainer.style.visibility = 'visible';
+        historyContainer.style.opacity = '1';
+        historyContainer.style.position = 'relative';
+        historyContainer.style.zIndex = '1';
     }
     
     return historyContainer;
@@ -244,6 +339,18 @@ function updateHistoryDisplay() {
         const emptyMessage = document.createElement('div');
         emptyMessage.className = 'history-item';
         emptyMessage.textContent = '暂无配对记录';
+        
+        // 设置内联样式
+        emptyMessage.style.display = 'flex';
+        emptyMessage.style.justifyContent = 'center';
+        emptyMessage.style.alignItems = 'center';
+        emptyMessage.style.padding = '10px';
+        emptyMessage.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        emptyMessage.style.borderRadius = '8px';
+        emptyMessage.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
+        emptyMessage.style.marginBottom = '8px';
+        emptyMessage.style.borderLeft = '4px solid #ccc';
+        
         historyList.appendChild(emptyMessage);
         return;
     }
@@ -252,13 +359,50 @@ function updateHistoryDisplay() {
     pairingHistory.slice().reverse().forEach(pair => {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
-        historyItem.innerHTML = `
-            <span class="female-history">${pair.female}</span>
-            <span>❤</span>
-            <span class="male-history">${pair.male}</span>
-        `;
+        
+        // 设置内联样式
+        historyItem.style.display = 'flex';
+        historyItem.style.justifyContent = 'center';
+        historyItem.style.alignItems = 'center';
+        historyItem.style.padding = '10px';
+        historyItem.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        historyItem.style.borderRadius = '8px';
+        historyItem.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
+        historyItem.style.marginBottom = '8px';
+        historyItem.style.borderLeft = '4px solid #ff4d7e';
+        
+        // 创建女生号码元素
+        const femaleSpan = document.createElement('span');
+        femaleSpan.className = 'female-history';
+        femaleSpan.textContent = pair.female;
+        femaleSpan.style.color = '#ff4d7e';
+        femaleSpan.style.fontWeight = 'bold';
+        femaleSpan.style.marginRight = '5px';
+        femaleSpan.style.fontSize = '18px';
+        
+        // 创建爱心元素
+        const heartSpan = document.createElement('span');
+        heartSpan.textContent = '❤';
+        heartSpan.style.color = '#ff4d7e';
+        
+        // 创建男生号码元素
+        const maleSpan = document.createElement('span');
+        maleSpan.className = 'male-history';
+        maleSpan.textContent = pair.male;
+        maleSpan.style.color = '#4785ba';
+        maleSpan.style.fontWeight = 'bold';
+        maleSpan.style.marginLeft = '5px';
+        maleSpan.style.fontSize = '18px';
+        
+        // 组装历史记录项
+        historyItem.appendChild(femaleSpan);
+        historyItem.appendChild(heartSpan);
+        historyItem.appendChild(maleSpan);
+        
         historyList.appendChild(historyItem);
     });
+    
+    console.log('历史记录显示更新完成，共', pairingHistory.length, '条记录');
 }
 
 // 控制按钮处理
