@@ -109,7 +109,6 @@
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.5s ease-in-out;
             min-width: 120px;
             text-align: center;
             flex: 0 1 auto;
@@ -154,7 +153,6 @@
                 flex-direction: column;
                 justify-content: center;
                 border-radius: 20px;
-                box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
                 background-color: transparent;
                 padding: 20px;
                 position: relative;
@@ -437,12 +435,6 @@
             
             /* 批量抽取结果超宽屏优化 */
             @media (min-width: 2400px) {
-                .activity-title {
-                    font-size: 2.5rem !important;
-                    padding: 15px;
-                    margin-bottom: 25px;
-                }
-                
                 .batch-results {
                     max-width: 90%;
                     display: grid;
@@ -569,24 +561,6 @@
             max-height: 60vh;
         }
         
-        /* 活动标题样式 */
-        .activity-title {
-            font-size: 1.5rem;
-            text-align: center;
-            margin: 0 0 15px 0;
-            color: white;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 15px;
-            background-color: rgba(255, 77, 126, 0.8);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(5px);
-            display: inline-block;
-            align-self: center;
-            position: relative;
-            z-index: 11;
-        }
-        
         /* 记录列表容器 */
         .records-list-container {
             width: 100%;
@@ -597,22 +571,10 @@
             background-color: rgba(255, 255, 255, 0.5);
             border-radius: 10px;
         }
-        
-        /* 超宽屏下的标题样式 */
-        .activity-title {
-            font-size: 2rem !important;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #ff4d7e, #4785ba);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="activity-title">2025年第十一届"南望山之恋"单身青年职工联谊交友活动</h1>
         <header>
             <div class="header-spacer"></div>
             <button id="records-button" class="settings-button" style="margin-right: 10px;" onclick="document.getElementById('records-panel').style.display='block';document.getElementById('main-content').style.display='none';">历史记录</button>
