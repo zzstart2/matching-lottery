@@ -70,6 +70,26 @@
             margin: 0 5px;
         }
         
+        .record-time {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .no-records {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .records-count-badge {
+            font-size: 1.2rem;
+            color: #888;
+            font-weight: normal;
+            margin-left: 15px;
+        }
+        
         /* 批量抽取结果样式 */
         .batch-results {
             display: grid;
@@ -513,12 +533,24 @@
             overflow-y: auto;
             max-height: 60vh;
         }
+        
+        /* 记录列表容器 */
+        .records-list-container {
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-spacer"></div>
+            <button id="records-button" class="settings-button" style="margin-right: 10px;" onclick="document.getElementById('records-panel').style.display='block';document.getElementById('main-content').style.display='none';">历史记录</button>
             <button id="settings-button" class="settings-button" onclick="document.getElementById('settings-panel').style.display='block';document.getElementById('main-content').style.display='none';">设置</button>
         </header>
 
@@ -556,6 +588,19 @@
                 <div id="records-list" class="records-list"></div>
             </div>
         </main>
+
+        <div id="records-panel" class="settings-panel" style="display: none;">
+            <h2 class="settings-title">历史记录 <span class="records-count-badge">共 <span id="records-count">0</span> 条</span></h2>
+            
+            <div class="records-list-container">
+                <div id="records-list" class="records-list"></div>
+            </div>
+            
+            <div class="settings-buttons">
+                <button id="clear-records" class="cancel-button" onclick="resetRecords()">清除记录</button>
+                <button id="close-records" class="save-button" onclick="document.getElementById('records-panel').style.display='none';document.getElementById('main-content').style.display='flex';">返回</button>
+            </div>
+        </div>
 
         <div id="settings-panel" class="settings-panel" style="display: none;">
             <h2 class="settings-title">设置</h2>
@@ -684,15 +729,13 @@
             recordsList.innerHTML = '';
             
             if (matchRecords.length === 0) {
-                document.getElementById('records-container').style.display = 'none';
+                recordsList.innerHTML = '<div class="no-records">暂无抽取记录</div>';
                 return;
             }
             
-            document.getElementById('records-container').style.display = 'flex';
-            
             // 创建包装容器确保每行居中显示
             let rowWrapper = null;
-            const itemsPerRow = 10;
+            const itemsPerRow = 5; // 每行显示更少的记录
             
             for (let i = 0; i < matchRecords.length; i++) {
                 // 每行开始创建新的包装容器
@@ -703,14 +746,29 @@
                     rowWrapper.style.justifyContent = 'center';
                     rowWrapper.style.width = '100%';
                     rowWrapper.style.flexWrap = 'wrap';
+                    rowWrapper.style.marginBottom = '10px';
                     recordsList.appendChild(rowWrapper);
                 }
                 
                 const record = matchRecords[i];
                 const recordItem = document.createElement('div');
                 recordItem.className = 'record-item';
-                recordItem.innerHTML = `${record.female} <span class="record-heart">❤</span> ${record.male}`;
+                
+                // 添加日期显示
+                const date = new Date(record.timestamp);
+                const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+                
+                recordItem.innerHTML = `
+                    <div>${record.female} <span class="record-heart">❤</span> ${record.male}</div>
+                    <div class="record-time">${dateStr}</div>
+                `;
                 rowWrapper.appendChild(recordItem);
+            }
+            
+            // 更新记录数量显示
+            const recordsCount = document.getElementById('records-count');
+            if (recordsCount) {
+                recordsCount.textContent = matchRecords.length;
             }
         }
         
