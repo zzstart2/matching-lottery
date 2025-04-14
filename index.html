@@ -193,7 +193,7 @@
                 gap: 15%;
                 margin: 0 auto;
                 width: 100%;
-                height: 60%;
+                height: 80%;
             }
             
             /* 女生和男生区域尺寸调整 */
@@ -589,7 +589,7 @@
         }
 
         main {
-            margin-top: 120px; /* 增加顶部间距，避免遮挡背景图标题 */
+            margin-top: 180px; /* 增加顶部间距，避免遮挡背景图标题 */
             position: relative;
             width: 100%;
             display: flex;
@@ -645,7 +645,7 @@
                 <div class="result-text" id="result-text"></div>
                 </div>
                 <div class="result-actions">
-                    <button class="result-clear-btn" onclick="resetRecords()">清除记录</button>
+                    <button class="result-clear-btn" onclick="handleControlButtonClick()">再次抽取</button>
                     <button class="result-close-btn" onclick="closeResultModal()">关闭</button>
                 </div>
             </div>
@@ -1216,20 +1216,23 @@
 
         // 从缓存加载设置
         function loadSettings() {
-            const settingsStr = localStorage.getItem('lotterySettings');
+            const settingsStr = localStorage.getItem('matchingLotterySettings');
             if (settingsStr) {
                 const settings = JSON.parse(settingsStr);
                 
                 if (settings.femaleRange) {
-                    femaleRange = settings.femaleRange;
-                    document.getElementById('female-min').value = femaleRange[0];
-                    document.getElementById('female-max').value = femaleRange[1];
+                    document.getElementById('female-min').value = settings.femaleRange.min;
+                    document.getElementById('female-max').value = settings.femaleRange.max;
                 }
                 
                 if (settings.maleRange) {
-                    maleRange = settings.maleRange;
-                    document.getElementById('male-min').value = maleRange[0];
-                    document.getElementById('male-max').value = maleRange[1];
+                    document.getElementById('male-min').value = settings.maleRange.min;
+                    document.getElementById('male-max').value = settings.maleRange.max;
+                }
+                
+                if (settings.fontSize) {
+                    document.getElementById('number-size').value = settings.fontSize.number;
+                    document.getElementById('label-size').value = settings.fontSize.label;
                 }
                 
                 if (settings.batchCount) {
