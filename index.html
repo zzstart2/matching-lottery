@@ -269,7 +269,8 @@
             /* 白色按钮样式 */
             .white-button {
                 background-color: white;
-                color: #333;
+                color: white;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             }
             
             /* 调整头部按钮位置 */
@@ -278,7 +279,16 @@
                 top: 15px;
                 right: 15px;
                 display: flex;
-                gap: 10px;
+                gap: 15px; /* 增加按钮间距 */
+            }
+            
+            /* 设置按钮独立样式 */
+            #records-button {
+                right: 95px; /* 调整历史记录按钮位置 */
+            }
+            
+            #settings-button {
+                right: 15px;
             }
             
             .control-button:hover {
