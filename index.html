@@ -40,6 +40,7 @@
             max-width: 1000px;
             margin: 0 auto;
             text-align: center;
+            padding: 0;
         }
         
         .record-item {
@@ -52,18 +53,12 @@
             align-items: center;
             min-width: 70px;
             justify-content: center;
-            margin: 3px;
+            margin: 5px;
         }
         
         .record-heart {
             color: #ff4d7e;
             margin: 0 5px;
-        }
-        
-        /* 限制每行最多10个标签 */
-        .record-item:nth-child(10n+1) {
-            page-break-after: always;
-            break-after: always;
         }
         
         /* 针对10:4屏幕比例的特殊样式 */
@@ -513,11 +508,27 @@
             
             document.getElementById('records-container').style.display = 'flex';
             
-            for (const record of matchRecords) {
+            // 创建包装容器确保每行居中显示
+            let rowWrapper = null;
+            const itemsPerRow = 10;
+            
+            for (let i = 0; i < matchRecords.length; i++) {
+                // 每行开始创建新的包装容器
+                if (i % itemsPerRow === 0) {
+                    rowWrapper = document.createElement('div');
+                    rowWrapper.className = 'record-row';
+                    rowWrapper.style.display = 'flex';
+                    rowWrapper.style.justifyContent = 'center';
+                    rowWrapper.style.width = '100%';
+                    rowWrapper.style.flexWrap = 'wrap';
+                    recordsList.appendChild(rowWrapper);
+                }
+                
+                const record = matchRecords[i];
                 const recordItem = document.createElement('div');
                 recordItem.className = 'record-item';
                 recordItem.innerHTML = `${record.female} <span class="record-heart">❤</span> ${record.male}`;
-                recordsList.appendChild(recordItem);
+                rowWrapper.appendChild(recordItem);
             }
         }
         
