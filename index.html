@@ -87,14 +87,16 @@
             font-size: 2.2rem;
             padding: 6px 14px;
             border-radius: 15px;
-            background: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.5s ease-in-out;
             min-width: 120px;
             text-align: center;
             flex: 0 1 auto;
             margin: 6px;
             display: inline-block;
+            font-weight: 600;
+            color: #333;
         }
         
         /* 针对10:4屏幕比例的特殊样式 */
@@ -282,8 +284,8 @@
                 overflow-y: auto;
                 z-index: 100;
                 padding: 15px;
-                background: rgba(255, 255, 255, 0.5);
-                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(5px);
                 border-radius: 20px;
             }
             
@@ -699,8 +701,8 @@
                     
                     // 暂停1秒后显示结果
                     setTimeout(() => {
-                        // 显示结果容器，但不隐藏抽奖容器
-                        document.querySelector('.lottery-container').style.opacity = '0.2';
+                        // 显示结果容器，背景轻微透明
+                        document.querySelector('.lottery-container').style.opacity = '0.3';
                         resultContainer.style.display = 'flex';
                         
                         // 创建心形符号
@@ -923,9 +925,9 @@
                     femaleNumber.textContent = match.female;
                     maleNumber.textContent = match.male;
                     
-                    // 添加到最终结果HTML，使用更紧凑的行内样式
+                    // 添加到最终结果HTML，使用更清晰的样式
                     resultHTML += `<div class="batch-result-item">
-                        ${match.female}<span style="color: #ff4d7e; margin: 0 2px;">❤</span>${match.male}
+                        ${match.female}<span style="color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${match.male}
                     </div>`;
                     
                     // 添加到抽取记录
@@ -948,7 +950,7 @@
                     renderRecords();
                     
                     // 显示结果容器
-                    document.querySelector('.lottery-container').style.opacity = '0.2';
+                    document.querySelector('.lottery-container').style.opacity = '0.3';
                     resultContainer.style.display = 'flex';
                     document.getElementById('result-text').innerHTML = resultHTML;
                     
