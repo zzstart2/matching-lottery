@@ -616,7 +616,7 @@
                 <div class="result-text" id="result-text"></div>
                 </div>
                 <div class="result-actions">
-                    <button class="cancel-button" onclick="handleControlButtonClick()">再次抽取</button>
+                    <button class="cancel-button" onclick="handleReDrawButtonClick()">再次抽取</button>
                     <button class="save-button" onclick="closeResultModal()">关闭</button>
                 </div>
             </div>
@@ -1266,6 +1266,36 @@
         // 辅助函数：将数字格式化为三位数
         function formatNumberToThreeDigits(number) {
             return number.toString().padStart(3, '0');
+        }
+        
+        // 处理"再次抽取"按钮点击
+        function handleReDrawButtonClick() {
+            // 先关闭结果弹窗
+            closeResultModal();
+            
+            // 判断上次是单次抽取还是批量抽取
+            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {};
+            const batchCount = settings.batchCount || 3;
+            
+            // 检查最后一次记录的时间戳，如果和其他几条记录时间相近，说明是批量抽取
+            if (matchRecords.length >= 2) {
+                let lastRecordTime = matchRecords[matchRecords.length - 1].timestamp;
+                let secondLastRecordTime = matchRecords[matchRecords.length - 2].timestamp;
+                
+                // 如果两次记录时间差小于2秒，认为是批量抽取
+                if (lastRecordTime - secondLastRecordTime < 2000) {
+                    // 执行批量抽取
+                    setTimeout(function() {
+                        handleBatchButtonClick();
+                    }, 300);
+                    return;
+                }
+            }
+            
+            // 单次抽取
+            setTimeout(function() {
+                handleControlButtonClick();
+            }, 300);
         }
     </script>
 </body>
