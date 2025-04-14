@@ -166,11 +166,11 @@
             /* 设置面板调整 */
             .settings-panel {
                 position: fixed;
-                width: 70%;
+                width: 60%;
                 height: auto;
                 max-height: 80vh;
-                left: 15%;
-                top: 10vh;
+                left: 20%;
+                top: 5vh;
                 border-radius: 20px;
                 box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
                 background-color: white;
@@ -190,9 +190,19 @@
                 margin-bottom: 40px;
             }
             
+            .settings-group {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+            }
+            
             .settings-item {
                 margin-bottom: 30px;
                 font-size: 2rem;
+                padding: 0 15px;
+                box-sizing: border-box;
+                width: 45%;
             }
             
             .settings-item input {
@@ -208,11 +218,16 @@
             }
             
             .settings-buttons {
-                margin-top: 40px;
+                margin-top: 20px;
                 margin-bottom: 20px;
                 display: flex;
                 justify-content: center;
                 gap: 30px;
+                position: sticky;
+                bottom: 0;
+                background-color: white;
+                padding: 15px 0;
+                box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
             }
             
             .save-button, .cancel-button {
@@ -232,6 +247,24 @@
                 background-color: #f44336;
                 color: white;
                 border: none;
+            }
+            
+            /* 针对超宽屏幕(如2700*1080)的额外优化 */
+            @media (min-width: 2400px) {
+                .settings-panel {
+                    width: 50%;
+                    left: 25%;
+                    max-height: 70vh;
+                }
+                
+                .settings-item {
+                    width: 40%;
+                    margin-bottom: 20px;
+                }
+                
+                .settings-title {
+                    margin-bottom: 30px;
+                }
             }
         }
     </style>
