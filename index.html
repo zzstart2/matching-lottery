@@ -593,7 +593,7 @@
             <h2 class="settings-title">历史记录 <span class="records-count-badge">共 <span id="records-count">0</span> 条</span></h2>
             
             <div class="records-list-container">
-                <div id="records-list" class="records-list"></div>
+                <div id="history-records-list" class="records-list"></div>
             </div>
             
             <div class="settings-buttons">
@@ -725,17 +725,43 @@
         
         // 渲染记录列表
         function renderRecords() {
-            const recordsList = document.getElementById('records-list');
-            recordsList.innerHTML = '';
-            
-            if (matchRecords.length === 0) {
-                recordsList.innerHTML = '<div class="no-records">暂无抽取记录</div>';
-                return;
+            // 更新主界面的记录列表（如果存在）
+            const mainRecordsList = document.getElementById('records-list');
+            if (mainRecordsList) {
+                mainRecordsList.innerHTML = '';
+                
+                if (matchRecords.length === 0) {
+                    mainRecordsList.innerHTML = '<div class="no-records">暂无抽取记录</div>';
+                }
+                else {
+                    renderRecordList(mainRecordsList, 5);
+                }
             }
             
+            // 更新历史记录面板的记录列表
+            const historyRecordsList = document.getElementById('history-records-list');
+            if (historyRecordsList) {
+                historyRecordsList.innerHTML = '';
+                
+                if (matchRecords.length === 0) {
+                    historyRecordsList.innerHTML = '<div class="no-records">暂无抽取记录</div>';
+                }
+                else {
+                    renderRecordList(historyRecordsList, 5);
+                }
+            }
+            
+            // 更新记录数量显示
+            const recordsCount = document.getElementById('records-count');
+            if (recordsCount) {
+                recordsCount.textContent = matchRecords.length;
+            }
+        }
+        
+        // 辅助函数：在指定容器中渲染记录列表
+        function renderRecordList(container, itemsPerRow) {
             // 创建包装容器确保每行居中显示
             let rowWrapper = null;
-            const itemsPerRow = 5; // 每行显示更少的记录
             
             for (let i = 0; i < matchRecords.length; i++) {
                 // 每行开始创建新的包装容器
@@ -747,7 +773,7 @@
                     rowWrapper.style.width = '100%';
                     rowWrapper.style.flexWrap = 'wrap';
                     rowWrapper.style.marginBottom = '10px';
-                    recordsList.appendChild(rowWrapper);
+                    container.appendChild(rowWrapper);
                 }
                 
                 const record = matchRecords[i];
@@ -763,12 +789,6 @@
                     <div class="record-time">${dateStr}</div>
                 `;
                 rowWrapper.appendChild(recordItem);
-            }
-            
-            // 更新记录数量显示
-            const recordsCount = document.getElementById('records-count');
-            if (recordsCount) {
-                recordsCount.textContent = matchRecords.length;
             }
         }
         
