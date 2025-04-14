@@ -172,12 +172,12 @@ function resetState() {
     resultContainer.style.display = 'none';
     resultText.classList.remove('animated');
     
-    // 重置按钮文本
-    controlButton.textContent = '开始';
-    
-    // 初始化数字
+    // 重置初始数字
     femaleNumber.textContent = settings.femaleRange.min;
     maleNumber.textContent = settings.maleRange.min;
+    
+    // 直接开始滚动
+    startRolling();
 }
 
 // 显示设置面板
