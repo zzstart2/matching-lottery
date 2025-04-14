@@ -263,8 +263,22 @@
                 margin: 0 10px;
                 backdrop-filter: blur(5px);
                 border: none;
-                background-color: rgba(255, 255, 255, 0.8);
                 color: #333;
+            }
+            
+            /* 白色按钮样式 */
+            .white-button {
+                background-color: white;
+                color: #333;
+            }
+            
+            /* 调整头部按钮位置 */
+            .header-buttons {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                display: flex;
+                gap: 10px;
             }
             
             .control-button:hover {
@@ -498,9 +512,9 @@
         
         /* 弹窗标题 */
         .result-title {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
             margin-bottom: 20px;
+            font-weight: bold;
             color: #333;
             width: 100%;
             text-align: center;
@@ -561,14 +575,43 @@
             background-color: rgba(255, 255, 255, 0.5);
             border-radius: 10px;
         }
+
+        main {
+            margin-top: 120px; /* 增加顶部间距，避免遮挡背景图标题 */
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        /* 弱化顶部按钮 */
+        .settings-button {
+            background-color: rgba(255, 255, 255, 0.5);
+            color: #555;
+            font-size: 14px;
+            padding: 6px 12px;
+            opacity: 0.8;
+        }
+
+        /* 结果文本样式 */
+        .result-text {
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-spacer"></div>
-            <button id="records-button" class="settings-button" style="margin-right: 10px;" onclick="document.getElementById('records-panel').style.display='block';document.getElementById('main-content').style.display='none';">历史记录</button>
-            <button id="settings-button" class="settings-button" onclick="document.getElementById('settings-panel').style.display='block';document.getElementById('main-content').style.display='none';">设置</button>
+            <div class="header-buttons">
+                <button id="records-button" class="settings-button" onclick="document.getElementById('records-panel').style.display='block';document.getElementById('main-content').style.display='none';">历史记录</button>
+                <button id="settings-button" class="settings-button" onclick="document.getElementById('settings-panel').style.display='block';document.getElementById('main-content').style.display='none';">设置</button>
+            </div>
         </header>
 
         <main id="main-content">
@@ -596,7 +639,7 @@
             </div>
             
             <div class="controls">
-                <button id="control-button" class="control-button" onclick="handleControlButtonClick()">抽1组</button>
+                <button id="control-button" class="control-button white-button" onclick="handleControlButtonClick()">抽1组</button>
                 <button id="batch-button" class="control-button batch-button" onclick="handleBatchButtonClick()">抽3组</button>
                 <button id="reset-button" class="reset-button" onclick="resetAllAndRecords()" style="display: none;">重新开始</button>
             </div>
