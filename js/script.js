@@ -84,10 +84,10 @@ function applySettings() {
     labelSizeInput.value = settings.fontSize.label;
     
     // 根据设置调整CSS
-    document.querySelector('.title').style.fontSize = `${settings.fontSize.title}px`;
     document.querySelectorAll('.section-title').forEach(el => {
         el.style.fontSize = `${settings.fontSize.label}px`;
     });
+    
     document.querySelectorAll('.number').forEach(el => {
         el.style.fontSize = `${settings.fontSize.number}px`;
     });
