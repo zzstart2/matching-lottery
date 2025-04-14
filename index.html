@@ -165,7 +165,7 @@
             
             /* 设置面板调整 */
             .settings-panel {
-                position: fixed;
+                position: absolute;
                 width: 70%;
                 height: 80vh;
                 left: 15%;
@@ -174,8 +174,11 @@
                 box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
                 background-color: white;
                 z-index: 1000;
-                padding: 20px;
+                padding: 30px;
                 overflow-y: auto;
+            }
+            
+            #settings-panel {
                 display: none;
             }
             
