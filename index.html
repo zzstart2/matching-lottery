@@ -61,6 +61,21 @@
                 flex-grow: 1;
             }
             
+            .settings-button {
+                cursor: pointer;
+                padding: 8px 15px;
+                font-size: 16px;
+                border-radius: 5px;
+                background-color: #f0f0f0;
+                border: 1px solid #ddd;
+                transition: all 0.3s;
+                z-index: 100;
+            }
+            
+            .settings-button:hover {
+                background-color: #e0e0e0;
+            }
+            
             /* 抽奖容器横向布局调整 */
             .lottery-container {
                 display: flex;
@@ -150,12 +165,18 @@
             
             /* 设置面板调整 */
             .settings-panel {
+                position: fixed;
                 width: 70%;
                 height: 80vh;
                 left: 15%;
                 top: 10vh;
                 border-radius: 20px;
                 box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+                background-color: white;
+                z-index: 1000;
+                padding: 20px;
+                overflow-y: auto;
+                display: none;
             }
             
             .settings-title {
