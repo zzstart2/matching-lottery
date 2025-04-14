@@ -72,28 +72,29 @@
         
         /* 批量抽取结果样式 */
         .batch-results {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             justify-content: center;
             align-items: center;
             width: 100%;
             max-height: 70vh;
             overflow-y: auto;
-            gap: 15px;
+            gap: 10px;
             padding: 10px;
         }
         
         .batch-result-item {
-            font-size: 2.5rem;
-            padding: 8px 16px;
+            font-size: 2.2rem;
+            padding: 6px 14px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.6);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.5s ease-in-out;
-            min-width: 160px;
+            min-width: 120px;
             text-align: center;
             flex: 0 1 auto;
-            margin: 5px;
+            margin: 6px;
+            display: inline-block;
         }
         
         /* 针对10:4屏幕比例的特殊样式 */
@@ -294,6 +295,8 @@
                 background-clip: text;
                 color: transparent;
                 text-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                width: 100%;
+                text-align: center;
             }
             
             /* 设置面板调整 */
@@ -908,7 +911,7 @@
             const maleNumber = document.getElementById('male-number');
             const resultContainer = document.getElementById('result-container');
             
-            // 初始化结果文本
+            // 初始化结果文本：使用表格样式布局
             let resultHTML = '<div class="batch-results">';
             
             // 滚动显示
@@ -920,7 +923,7 @@
                     femaleNumber.textContent = match.female;
                     maleNumber.textContent = match.male;
                     
-                    // 添加到最终结果HTML，改为更紧凑的布局
+                    // 添加到最终结果HTML，使用更紧凑的行内样式
                     resultHTML += `<div class="batch-result-item">
                         ${match.female}<span style="color: #ff4d7e; margin: 0 2px;">❤</span>${match.male}
                     </div>`;
