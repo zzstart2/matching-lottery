@@ -221,7 +221,7 @@
     <div class="container">
         <header>
             <div class="header-spacer"></div>
-            <button id="settings-button" class="settings-button">设置</button>
+            <button id="settings-button" class="settings-button" onclick="document.getElementById('settings-panel').style.display='block';document.getElementById('main-content').style.display='none';">设置</button>
         </header>
 
         <main id="main-content">
@@ -285,12 +285,47 @@
             </div>
             
             <div class="settings-buttons">
-                <button id="save-settings" class="save-button">保存并返回</button>
-                <button id="cancel-settings" class="cancel-button">取消</button>
+                <button id="save-settings" class="save-button" onclick="handleSaveSettings()">保存并返回</button>
+                <button id="cancel-settings" class="cancel-button" onclick="document.getElementById('settings-panel').style.display='none';document.getElementById('main-content').style.display='flex';">取消</button>
             </div>
         </div>
     </div>
 
     <script src="js/script.js" defer></script>
+    <script>
+        // 内联JavaScript，确保设置面板功能正常工作
+        function handleSaveSettings() {
+            // 验证和获取输入值
+            const femaleMin = Math.max(1, parseInt(document.getElementById('female-min').value) || 1);
+            const femaleMax = Math.max(femaleMin, parseInt(document.getElementById('female-max').value) || 103);
+            const maleMin = Math.max(1, parseInt(document.getElementById('male-min').value) || 1);
+            const maleMax = Math.max(maleMin, parseInt(document.getElementById('male-max').value) || 73);
+            
+            const titleSize = Math.max(16, Math.min(72, parseInt(document.getElementById('title-size').value) || 48));
+            const numberSize = Math.max(16, Math.min(160, parseInt(document.getElementById('number-size').value) || 80));
+            const labelSize = Math.max(12, Math.min(48, parseInt(document.getElementById('label-size').value) || 28));
+            
+            // 更新设置
+            let settings = {
+                femaleRange: { min: femaleMin, max: femaleMax },
+                maleRange: { min: maleMin, max: maleMax },
+                fontSize: {
+                    title: titleSize,
+                    number: numberSize,
+                    label: labelSize
+                }
+            };
+            
+            // 保存设置
+            localStorage.setItem('matchingLotterySettings', JSON.stringify(settings));
+            
+            // 关闭设置面板
+            document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+            
+            // 刷新页面以应用设置
+            location.reload();
+        }
+    </script>
 </body>
 </html> 
