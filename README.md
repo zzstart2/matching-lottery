@@ -1,5 +1,7 @@
 # 相亲活动摇号系统 - 网页版
 
+[![Deploy to GitHub Pages](https://github.com/zzstart2/matching-lottery/actions/workflows/pages.yml/badge.svg)](https://github.com/zzstart2/matching-lottery/actions/workflows/pages.yml)
+
 这是一个使用HTML、CSS和JavaScript开发的相亲活动摇号系统网页版。该系统可以随机匹配女生和男生的号码，支持自定义号码范围、字体大小等设置。
 
 ## 在线访问
