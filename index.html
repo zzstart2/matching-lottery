@@ -116,7 +116,7 @@
         /* 抽奖容器样式 */
         .lottery-container {
             display: flex;
-            justify-content: center;
+            gap: 30px;
             gap: 10%;
             margin: 0 auto;
             width: 100%;
@@ -283,43 +283,45 @@
         /* 结果容器样式 */
         .result-container {
             position: fixed;
-            width: 60%;
-            height: auto;
-            max-height: 80vh;
-            left: 20%;
+            width: 70%;
+            height: 80vh;
+            left: 15%;
             top: 50%;
             transform: translateY(-50%);
             border-radius: 20px;
             background-color: white;
             z-index: 1000;
-            padding: 30px;
-            overflow-y: auto;
+            padding: 0;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
         
         .result-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
+            font-size: 2.2rem;
             font-weight: bold;
             color: #333;
             width: 100%;
             text-align: center;
             border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
+            padding: 20px 0;
+            margin: 0;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 5;
         }
         
         .result-content {
+            flex: 1;
             width: 100%;
-            max-height: 70vh;
             overflow-y: auto;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 20px;
             background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            gap: 30px;
+            align-items: flex-start;
+            scroll-behavior: smooth;
         }
         
         .result-text {
@@ -331,15 +333,17 @@
         }
         
         .result-actions {
-            margin-top: 20px;
-            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             gap: 30px;
             position: sticky;
             bottom: 0;
-            background-color: transparent;
-            padding: 15px 0;
+            background-color: white;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            margin: 0;
+            z-index: 5;
+            width: 100%;
         }
         
         .result-close-btn, .result-clear-btn {
@@ -462,13 +466,11 @@
         }
         
         .records-list-container {
+            flex: 1;
             width: 100%;
-            max-height: 70vh;
             overflow-y: auto;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 20px;
             background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
             scroll-behavior: smooth;
         }
         
@@ -476,29 +478,32 @@
         .settings-panel {
             position: fixed;
             width: 70%;
-            height: auto;
-            max-height: 80vh;
+            height: 80vh;
             left: 15%;
             top: 50%;
             transform: translateY(-50%);
             border-radius: 20px;
             background-color: white;
             z-index: 1000;
-            padding: 30px;
-            overflow-y: auto;
+            padding: 0;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
         
         .settings-title {
             font-size: 3.5rem !important;
-            margin-bottom: 40px;
             font-weight: bold;
             color: #333;
             width: 100%;
             text-align: center;
             border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
+            padding: 20px 0;
+            margin: 0;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 5;
         }
         
         .settings-group {
@@ -529,15 +534,6 @@
         }
         
         .settings-buttons {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            position: sticky;
-            bottom: 0;
-            background-color: transparent;
-            padding: 15px 0;
         }
         
         .save-button, .cancel-button {
@@ -573,6 +569,20 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             animation: fadeIn 0.8s ease-out;
+        }
+        
+        .settings-buttons {
+            display: flex;
+            gap: 30px;
+            gap: 30px;
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            margin: 0;
+            z-index: 5;
+            width: 100%;
         }
         
     </style>
