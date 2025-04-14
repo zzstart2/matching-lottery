@@ -58,6 +58,9 @@ function init() {
     console.log('是否为GitHub Pages环境:', window.location.hostname.includes('github.io'));
     
     loadSettings();
+    
+    // 加载历史记录（仅在当前会话期间保存，关闭页面后将清除）
+    console.log('加载会话历史记录（临时存储）...');
     loadHistory();
     
     // 如果没有历史记录，添加示例数据
@@ -142,8 +145,8 @@ function loadSettings() {
 
 // 加载历史记录
 function loadHistory() {
-    const savedHistory = localStorage.getItem('matchingLotteryHistory');
-    const savedPairedNumbers = localStorage.getItem('matchingLotteryPairedNumbers');
+    const savedHistory = sessionStorage.getItem('matchingLotteryHistory');
+    const savedPairedNumbers = sessionStorage.getItem('matchingLotteryPairedNumbers');
     
     if (savedHistory) {
         try {
@@ -171,8 +174,9 @@ function saveSettings() {
 
 // 保存历史记录
 function saveHistory() {
-    localStorage.setItem('matchingLotteryHistory', JSON.stringify(pairingHistory));
-    localStorage.setItem('matchingLotteryPairedNumbers', JSON.stringify(pairedNumbers));
+    sessionStorage.setItem('matchingLotteryHistory', JSON.stringify(pairingHistory));
+    sessionStorage.setItem('matchingLotteryPairedNumbers', JSON.stringify(pairedNumbers));
+    console.log('历史记录已保存到会话存储（关闭页面后将失效）');
 }
 
 // 应用设置到UI
@@ -293,7 +297,7 @@ function ensureHistoryContainer() {
         
         const historyTitle = document.createElement('h2');
         historyTitle.className = 'history-title';
-        historyTitle.textContent = '配对历史记录';
+        historyTitle.textContent = '配对历史记录（会话期间）';
         historyTitle.style.fontSize = '22px';
         historyTitle.style.color = '#333';
         historyTitle.style.margin = '0';
