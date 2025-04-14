@@ -127,7 +127,7 @@
         /* 女生和男生区域样式 */
         .female-section, .male-section {
             width: 30%;
-            padding: 30px;
+            padding: 10px;
             border-radius: 80px;
             display: flex;
             flex-direction: column;
@@ -152,7 +152,7 @@
             left: -3px;
             z-index: -1;
             border-radius: 80px;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            background: linear-gradient(to right, rgba(255, 154, 158, 0.3), rgba(250, 208, 196, 0.3));
         }
         
         .male-section {
@@ -170,17 +170,17 @@
             left: -3px;
             z-index: -1;
             border-radius: 80px;
-            background: linear-gradient(to right, #84fab0, #8fd3f4);
+            background: linear-gradient(to right, rgba(143, 211, 244, 0.3), rgba(74, 157, 207, 0.3));
         }
         
         /* 号码显示样式 */
         .number {
-            width: 250px;
-            height: 200px;
-            line-height: 200px;
-            font-size: 8rem !important;
+            width: 220px;
+            height: 130px;
+            line-height: 130px;
+            font-size: 7rem !important;
             font-weight: 700;
-            margin: 20px auto;
+            margin: 10px auto;
             text-align: center;
             color: white;
             background-clip: text;
@@ -199,7 +199,7 @@
         /* 分区标题样式 */
         .section-title {
             font-size: 2.5rem !important;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: 700;
             color: #666;
         }
@@ -552,6 +552,23 @@
         .cancel-button {
             background-color: #f44336;
             color: white;
+        }
+        
+        /* 结果项样式 */
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 260px;
+            min-height: 140px;
+            margin: 10px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out;
         }
         
     </style>
@@ -1119,7 +1136,7 @@
                     });
                     
                     batchIndex++;
-                    setTimeout(displayNextMatch, 600); // 每600ms显示一对
+                    setTimeout(displayNextMatch, 300); // 每300ms显示一对，加快抽取速度
                 } else {
                     // 所有结果显示完毕
                     resultHTML += '</div>';
