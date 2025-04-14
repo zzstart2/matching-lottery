@@ -52,6 +52,13 @@
             /* 头部样式增强 */
             header {
                 margin-bottom: 30px;
+                display: flex;
+                justify-content: flex-end;
+                padding: 20px;
+            }
+            
+            .header-spacer {
+                flex-grow: 1;
             }
             
             /* 抽奖容器横向布局调整 */
@@ -189,7 +196,7 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="title">相亲活动摇号系统</h1>
+            <div class="header-spacer"></div>
             <button id="settings-button" class="settings-button">设置</button>
         </header>
 
