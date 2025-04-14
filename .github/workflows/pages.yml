@@ -3,13 +3,13 @@ name: Deploy to GitHub Pages
 on:
   # 当推送到main分支时触发部署
   push:
-    branches: [ main ]
+    branches: [ main, gh-pages ]
   # 允许手动触发部署
   workflow_dispatch:
 
 # 设置GITHUB_TOKEN的权限
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -54,13 +54,10 @@ jobs:
           }
           EOL
       
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: '.'
-          # 添加自定义头信息来控制缓存
-          headers-json-file: .github/temp/headers.json
-      
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: gh-pages
+          clean: true 
