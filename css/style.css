@@ -141,13 +141,6 @@ main {
     font-size: 60px;
     font-weight: bold;
     color: #333;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
 }
 
 /* 控制按钮样式 */

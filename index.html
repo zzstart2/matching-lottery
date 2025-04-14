@@ -502,8 +502,7 @@
         
         /* 结果容器弹窗样式 */
         .result-container {
-            height: auto;
-            max-height: 80vh;
+            height: 80%; /* 修改为固定80%高度 */
             position: fixed;
             top: 50%;
             left: 50%;
@@ -570,9 +569,12 @@
         
         /* 结果内容区域 */
         .result-content {
-            width: 100%;
+            width: 80%; /* 修改为80%宽度 */
+            height: 80%; /* 修改为80%高度 */
+            display: flex;
+            justify-content: center; /* 居中对齐 */
+            align-items: center; /* 垂直居中 */
             overflow-y: auto;
-            max-height: 60vh;
         }
         
         /* 记录列表容器 */
@@ -640,7 +642,7 @@
             <div class="result-container" id="result-container" style="display: none;">
                 <div class="result-title">抽取结果</div>
                 <div class="result-content">
-                    <div class="result-text" id="result-text"></div>
+                <div class="result-text" id="result-text"></div>
                 </div>
                 <div class="result-actions">
                     <button class="result-clear-btn" onclick="resetRecords()">清除记录</button>
