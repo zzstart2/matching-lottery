@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap">
     <link rel="icon" href="img/heart.png">
     <style>
+        #main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
         .session-note {
             text-align: center;
             margin-top: 10px;
@@ -60,6 +68,26 @@
         .record-heart {
             color: #ff4d7e;
             margin: 0 5px;
+        }
+        
+        /* 批量抽取结果样式 */
+        .batch-results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            gap: 15px;
+        }
+        
+        .batch-result-item {
+            font-size: 3rem;
+            padding: 10px 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
         }
         
         /* 针对10:4屏幕比例的特殊样式 */
@@ -187,11 +215,17 @@
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
                 font-weight: 600;
                 letter-spacing: 5px;
-                width: 300px;
+                width: 230px;
                 position: relative;
                 text-align: center;
                 transition: background-color 0.3s;
                 display: inline-block;
+                margin: 0 10px;
+            }
+            
+            .batch-button {
+                background: linear-gradient(45deg, #ff4d7e, #4785ba);
+                color: white;
             }
             
             /* 控制容器固定尺寸 */
@@ -228,7 +262,8 @@
             
             /* 结果容器调整，避免影响布局 */
             .result-container {
-                height: 60%;
+                height: auto;
+                max-height: 70vh;
                 position: absolute;
                 top: 40%;
                 left: 50%;
@@ -237,6 +272,13 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                overflow-y: auto;
+                z-index: 100;
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             }
             
             .result-text {
@@ -399,7 +441,8 @@
             </div>
             
             <div class="controls">
-                <button id="control-button" class="control-button" onclick="handleControlButtonClick()">开始</button>
+                <button id="control-button" class="control-button" onclick="handleControlButtonClick()">抽1组</button>
+                <button id="batch-button" class="control-button batch-button" onclick="handleBatchButtonClick()">抽3组</button>
                 <button id="reset-button" class="reset-button" onclick="resetAllAndRecords()" style="display: none;">重新开始</button>
             </div>
             
@@ -439,6 +482,11 @@
                     <label>标签字号</label>
                     <input type="number" id="label-size" min="12" max="48" value="28">
                 </div>
+                
+                <div class="settings-item">
+                    <label>一次抽取组数</label>
+                    <input type="number" id="batch-count" min="1" max="10" value="3">
+                </div>
             </div>
             
             <div class="settings-buttons">
@@ -465,9 +513,10 @@
         let usedFemaleNumbers = new Set();
         let usedMaleNumbers = new Set();
         
-        // 页面加载时从localStorage加载记录
+        // 页面加载时从localStorage加载记录和更新批量按钮文本
         window.onload = function() {
             loadRecordsFromCache();
+            updateBatchButtonText();
         };
         
         // 从缓存加载记录
@@ -613,7 +662,7 @@
                         
                         // 恢复按钮状态
                         controlButton.disabled = false;
-                        controlButton.textContent = '再抽一对';
+                        controlButton.textContent = '抽1组';
                         
                         // 显示重新开始按钮
                         document.getElementById('reset-button').style.display = 'inline-block';
@@ -657,6 +706,7 @@
             
             const numberSize = Math.max(16, Math.min(160, parseInt(document.getElementById('number-size').value) || 80));
             const labelSize = Math.max(12, Math.min(48, parseInt(document.getElementById('label-size').value) || 28));
+            const batchCount = Math.max(1, Math.min(10, parseInt(document.getElementById('batch-count').value) || 3));
             
             // 更新设置
             let settings = {
@@ -665,7 +715,8 @@
                 fontSize: {
                     number: numberSize,
                     label: labelSize
-                }
+                },
+                batchCount: batchCount
             };
             
             // 保存设置
@@ -702,7 +753,7 @@
             resultContainer.style.display = 'none';
             
             // 重置按钮
-            controlButton.textContent = '开始';
+            controlButton.textContent = '抽1组';
             document.getElementById('reset-button').style.display = 'none';
         }
         
@@ -748,9 +799,131 @@
                 document.getElementById('records-container').style.display = 'none';
                 
                 // 重置按钮
-                controlButton.textContent = '开始';
+                controlButton.textContent = '抽1组';
                 document.getElementById('reset-button').style.display = 'none';
             }
+        }
+        
+        // 处理批量抽取按钮点击
+        function handleBatchButtonClick() {
+            if (state.rolling) return; // 如果正在滚动中则忽略
+            
+            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {
+                femaleRange: { min: 1, max: 103 },
+                maleRange: { min: 1, max: 73 },
+                batchCount: 3
+            };
+            
+            // 获取未使用的可用号码范围
+            const availableFemale = getAvailableNumbers(settings.femaleRange.min, settings.femaleRange.max, usedFemaleNumbers);
+            const availableMale = getAvailableNumbers(settings.maleRange.min, settings.maleRange.max, usedMaleNumbers);
+            
+            // 检查是否有足够的可用号码
+            if (availableFemale.length < settings.batchCount || availableMale.length < settings.batchCount) {
+                alert(`可用号码不足，无法一次抽取${settings.batchCount}组！\n女生号码剩余: ${availableFemale.length}\n男生号码剩余: ${availableMale.length}`);
+                return;
+            }
+            
+            // 禁用按钮，防止连续点击
+            const batchButton = document.getElementById('batch-button');
+            const controlButton = document.getElementById('control-button');
+            batchButton.disabled = true;
+            controlButton.disabled = true;
+            
+            // 生成随机组合
+            const matches = [];
+            const tempUsedFemale = new Set([...usedFemaleNumbers]);
+            const tempUsedMale = new Set([...usedMaleNumbers]);
+            
+            for (let i = 0; i < settings.batchCount; i++) {
+                // 获取当前可用号码
+                const currentAvailableFemale = getAvailableNumbers(settings.femaleRange.min, settings.femaleRange.max, tempUsedFemale);
+                const currentAvailableMale = getAvailableNumbers(settings.maleRange.min, settings.maleRange.max, tempUsedMale);
+                
+                // 随机选择号码
+                const femaleIndex = Math.floor(Math.random() * currentAvailableFemale.length);
+                const maleIndex = Math.floor(Math.random() * currentAvailableMale.length);
+                
+                const femaleNumber = currentAvailableFemale[femaleIndex];
+                const maleNumber = currentAvailableMale[maleIndex];
+                
+                // 添加到临时已使用集合
+                tempUsedFemale.add(femaleNumber);
+                tempUsedMale.add(maleNumber);
+                
+                // 添加到结果
+                matches.push({
+                    female: femaleNumber,
+                    male: maleNumber
+                });
+            }
+            
+            // 模拟快速滚动显示
+            let batchIndex = 0;
+            const femaleNumber = document.getElementById('female-number');
+            const maleNumber = document.getElementById('male-number');
+            const resultContainer = document.getElementById('result-container');
+            
+            // 初始化结果文本
+            let resultHTML = '<div class="batch-results">';
+            
+            // 滚动显示
+            const displayNextMatch = () => {
+                if (batchIndex < matches.length) {
+                    const match = matches[batchIndex];
+                    
+                    // 显示当前号码
+                    femaleNumber.textContent = match.female;
+                    maleNumber.textContent = match.male;
+                    
+                    // 添加到最终结果HTML
+                    resultHTML += `<div class="batch-result-item">
+                        ${match.female} <span style="color: #ff4d7e;">❤</span> ${match.male}
+                    </div>`;
+                    
+                    // 添加到抽取记录
+                    usedFemaleNumbers.add(match.female);
+                    usedMaleNumbers.add(match.male);
+                    matchRecords.push({
+                        female: match.female,
+                        male: match.male,
+                        timestamp: new Date().getTime()
+                    });
+                    
+                    batchIndex++;
+                    setTimeout(displayNextMatch, 600); // 每600ms显示一对
+                } else {
+                    // 所有结果显示完毕
+                    resultHTML += '</div>';
+                    
+                    // 保存并显示记录
+                    saveRecordsToCache();
+                    renderRecords();
+                    
+                    // 显示结果容器
+                    document.querySelector('.lottery-container').style.opacity = '0.2';
+                    resultContainer.style.display = 'flex';
+                    document.getElementById('result-text').innerHTML = resultHTML;
+                    
+                    // 恢复按钮状态
+                    batchButton.disabled = false;
+                    controlButton.disabled = false;
+                    
+                    // 显示重新开始按钮
+                    document.getElementById('reset-button').style.display = 'inline-block';
+                }
+            };
+            
+            // 开始显示
+            displayNextMatch();
+        }
+        
+        // 更新批量按钮文本
+        function updateBatchButtonText() {
+            const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {
+                batchCount: 3
+            };
+            document.getElementById('batch-button').textContent = `抽${settings.batchCount}组`;
         }
     </script>
 </body>
