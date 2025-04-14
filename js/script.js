@@ -65,9 +65,18 @@ function init() {
         saveHistory();
     }
     
+    // 检查DOM元素是否正确加载
+    console.log('历史记录列表元素：', historyList);
+    console.log('历史记录重置按钮：', resetHistoryButton);
+    
     applySettings();
     bindEvents();
-    updateHistoryDisplay();
+    
+    // 延迟执行历史记录显示，确保DOM已完全加载
+    setTimeout(() => {
+        console.log('延迟执行更新历史记录显示');
+        updateHistoryDisplay();
+    }, 500);
 }
 
 // 加载设置
@@ -170,13 +179,65 @@ function resetHistory() {
     }
 }
 
+// 确保历史记录容器存在
+function ensureHistoryContainer() {
+    let historyContainer = document.querySelector('.history-container');
+    
+    // 如果历史记录容器不存在，则创建一个
+    if (!historyContainer) {
+        console.log('历史记录容器不存在，创建新容器');
+        
+        historyContainer = document.createElement('div');
+        historyContainer.className = 'history-container';
+        
+        // 创建标题和重置按钮区域
+        const historyHeader = document.createElement('div');
+        historyHeader.className = 'history-header';
+        
+        const historyTitle = document.createElement('h2');
+        historyTitle.className = 'history-title';
+        historyTitle.textContent = '配对历史记录';
+        
+        const resetButton = document.createElement('button');
+        resetButton.id = 'reset-history';
+        resetButton.className = 'reset-button';
+        resetButton.textContent = '重置记录';
+        resetButton.addEventListener('click', resetHistory);
+        
+        historyHeader.appendChild(historyTitle);
+        historyHeader.appendChild(resetButton);
+        
+        // 创建历史记录列表容器
+        const newHistoryList = document.createElement('div');
+        newHistoryList.id = 'history-list';
+        newHistoryList.className = 'history-list';
+        
+        historyContainer.appendChild(historyHeader);
+        historyContainer.appendChild(newHistoryList);
+        
+        // 将容器添加到主内容区域
+        mainContent.appendChild(historyContainer);
+        
+        // 更新全局变量
+        historyList = newHistoryList;
+        resetHistoryButton = resetButton;
+    }
+    
+    return historyContainer;
+}
+
 // 更新历史记录显示
 function updateHistoryDisplay() {
     console.log('更新历史记录：', pairingHistory);
     
-    // 确保历史记录容器可见
-    document.querySelector('.history-container').style.display = 'block';
+    // 确保历史记录容器存在
+    const historyContainer = ensureHistoryContainer();
+    console.log('历史记录容器元素：', historyContainer);
     
+    // 确保历史记录容器可见
+    historyContainer.style.display = 'block';
+    
+    // 更新历史记录列表
     historyList.innerHTML = '';
     
     if (pairingHistory.length === 0) {

@@ -66,6 +66,8 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow: visible;
+    min-height: 600px;
 }
 
 .lottery-container {
@@ -330,6 +332,10 @@ main {
     background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     display: block !important; /* 强制显示 */
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    visibility: visible !important;
 }
 
 .history-header {
