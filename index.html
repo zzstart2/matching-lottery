@@ -21,6 +21,67 @@
             padding-bottom: 20px;
         }
         
+        /* 记录容器样式 */
+        .records-container {
+            margin-top: 40px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .records-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .records-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .records-reset {
+            font-size: 1.2rem;
+            color: #777;
+            background: none;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        .records-reset:hover {
+            color: #f44336;
+        }
+        
+        .records-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .record-item {
+            background: linear-gradient(45deg, rgba(255, 182, 193, 0.4), rgba(135, 206, 235, 0.4));
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .record-heart {
+            color: #ff4d7e;
+            margin: 0 5px;
+        }
+        
         /* 针对10:4屏幕比例的特殊样式 */
         @media (min-aspect-ratio: 9/4) {
             body {
@@ -341,6 +402,14 @@
                 <button id="control-button" class="control-button" onclick="handleControlButtonClick()">开始</button>
                 <button id="reset-button" class="reset-button" onclick="resetAll()" style="display: none;">重新开始</button>
             </div>
+            
+            <div id="records-container" class="records-container" style="display: none;">
+                <div class="records-header">
+                    <span class="records-title">抽取记录</span>
+                    <button class="records-reset" onclick="resetRecords()">重置记录</button>
+                </div>
+                <div id="records-list" class="records-list"></div>
+            </div>
         </main>
 
         <div id="settings-panel" class="settings-panel" style="display: none;">
@@ -394,6 +463,77 @@
             step: 0,  // 0: 初始状态, 1: 停止滚动, 2: 显示结果
         };
         
+        // 用于存储抽取记录
+        let matchRecords = [];
+        // 已抽取的女生和男生号码
+        let usedFemaleNumbers = new Set();
+        let usedMaleNumbers = new Set();
+        
+        // 页面加载时从localStorage加载记录
+        window.onload = function() {
+            loadRecordsFromCache();
+        };
+        
+        // 从缓存加载记录
+        function loadRecordsFromCache() {
+            const savedRecords = localStorage.getItem('matchingLotteryRecords');
+            if (savedRecords) {
+                try {
+                    matchRecords = JSON.parse(savedRecords);
+                    
+                    // 重建已使用号码集合
+                    usedFemaleNumbers = new Set();
+                    usedMaleNumbers = new Set();
+                    
+                    for (const record of matchRecords) {
+                        usedFemaleNumbers.add(record.female);
+                        usedMaleNumbers.add(record.male);
+                    }
+                    
+                    // 显示记录
+                    renderRecords();
+                } catch (e) {
+                    console.error('无法加载抽取记录:', e);
+                }
+            }
+        }
+        
+        // 保存记录到缓存
+        function saveRecordsToCache() {
+            localStorage.setItem('matchingLotteryRecords', JSON.stringify(matchRecords));
+        }
+        
+        // 渲染记录列表
+        function renderRecords() {
+            const recordsList = document.getElementById('records-list');
+            recordsList.innerHTML = '';
+            
+            if (matchRecords.length === 0) {
+                document.getElementById('records-container').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('records-container').style.display = 'flex';
+            
+            for (const record of matchRecords) {
+                const recordItem = document.createElement('div');
+                recordItem.className = 'record-item';
+                recordItem.innerHTML = `${record.female} <span class="record-heart">❤</span> ${record.male}`;
+                recordsList.appendChild(recordItem);
+            }
+        }
+        
+        // 重置所有记录
+        function resetRecords() {
+            if (confirm('确定要清除所有抽取记录吗？')) {
+                matchRecords = [];
+                usedFemaleNumbers = new Set();
+                usedMaleNumbers = new Set();
+                saveRecordsToCache();
+                renderRecords();
+            }
+        }
+        
         // 控制按钮点击处理
         function handleControlButtonClick() {
             const controlButton = document.getElementById('control-button');
@@ -413,9 +553,23 @@
                     controlButton.textContent = '停止';
                     
                     state.rollInterval = setInterval(() => {
-                        // 随机选择号码
-                        const femaleRandomNumber = Math.floor(Math.random() * (settings.femaleRange.max - settings.femaleRange.min + 1)) + settings.femaleRange.min;
-                        const maleRandomNumber = Math.floor(Math.random() * (settings.maleRange.max - settings.maleRange.min + 1)) + settings.maleRange.min;
+                        // 获取未使用的可用号码范围
+                        const availableFemale = getAvailableNumbers(settings.femaleRange.min, settings.femaleRange.max, usedFemaleNumbers);
+                        const availableMale = getAvailableNumbers(settings.maleRange.min, settings.maleRange.max, usedMaleNumbers);
+                        
+                        // 检查是否还有可用号码
+                        if (availableFemale.length === 0 || availableMale.length === 0) {
+                            clearInterval(state.rollInterval);
+                            state.rollInterval = null;
+                            alert('所有可能的配对都已抽取完毕！');
+                            controlButton.textContent = '开始';
+                            state.step = 0;
+                            return;
+                        }
+                        
+                        // 随机选择未使用的号码
+                        const femaleRandomNumber = availableFemale[Math.floor(Math.random() * availableFemale.length)];
+                        const maleRandomNumber = availableMale[Math.floor(Math.random() * availableMale.length)];
                         
                         femaleNumber.textContent = femaleRandomNumber;
                         maleNumber.textContent = maleRandomNumber;
@@ -451,6 +605,19 @@
                         
                         // 显示重新开始按钮
                         document.getElementById('reset-button').style.display = 'inline-block';
+                        
+                        // 添加到抽取记录
+                        usedFemaleNumbers.add(state.selectedFemale);
+                        usedMaleNumbers.add(state.selectedMale);
+                        matchRecords.push({
+                            female: state.selectedFemale,
+                            male: state.selectedMale,
+                            timestamp: new Date().getTime()
+                        });
+                        
+                        // 保存并显示记录
+                        saveRecordsToCache();
+                        renderRecords();
                     }, 1000);
                     break;
                     
@@ -525,6 +692,17 @@
             // 重置按钮
             controlButton.textContent = '开始';
             document.getElementById('reset-button').style.display = 'none';
+        }
+        
+        // 获取未使用的可用号码
+        function getAvailableNumbers(min, max, usedNumbers) {
+            const available = [];
+            for (let i = min; i <= max; i++) {
+                if (!usedNumbers.has(i)) {
+                    available.push(i);
+                }
+            }
+            return available;
         }
     </script>
 </body>
