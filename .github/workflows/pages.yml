@@ -1,17 +1,26 @@
 name: Deploy to GitHub Pages
 
 on:
+  # 当推送到main分支时触发部署
   push:
     branches: [ main ]
+  # 允许手动触发部署
   workflow_dispatch:
 
+# 设置GITHUB_TOKEN的权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# 允许一个并发部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
-  deploy:
+  # 构建并部署工作流
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -19,12 +28,39 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # 获取所有分支和标签
+      
       - name: Setup Pages
         uses: actions/configure-pages@v3
+      
+      - name: Build
+        run: |
+          echo "Building site..."
+          # 设置缓存控制
+          echo "设置缓存控制头..."
+          mkdir -p .github/temp
+          cat > .github/temp/headers.json << EOL
+          {
+            "/*.html": {
+              "Cache-Control": "no-cache"
+            },
+            "/js/*.js": {
+              "Cache-Control": "public, max-age=86400"
+            },
+            "/css/*.css": {
+              "Cache-Control": "public, max-age=86400"
+            }
+          }
+          EOL
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: '.'
+          # 添加自定义头信息来控制缓存
+          headers-json-file: .github/temp/headers.json
+      
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2 
