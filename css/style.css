@@ -16,7 +16,8 @@ body {
 
 .container {
     width: 1000px;
-    height: 500px;
+    height: auto;
+    min-height: 600px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -61,10 +62,10 @@ header {
 /* 主内容区域样式 */
 main {
     padding: 20px;
-    height: calc(100% - 90px);
+    height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .lottery-container {
@@ -324,6 +325,11 @@ main {
     overflow-y: auto;
     border-top: 1px solid #ddd;
     padding-top: 20px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .history-header {
@@ -365,20 +371,24 @@ main {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     animation: slideIn 0.3s ease-out;
+    margin-bottom: 8px;
+    border-left: 4px solid #ff4d7e;
 }
 
 .female-history {
     color: #ff4d7e;
     font-weight: bold;
     margin-right: 5px;
+    font-size: 18px;
 }
 
 .male-history {
     color: #4785ba;
     font-weight: bold;
     margin-left: 5px;
+    font-size: 18px;
 } 
