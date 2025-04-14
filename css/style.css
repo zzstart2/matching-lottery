@@ -20,7 +20,6 @@ body {
     min-height: 600px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     position: relative;
 }
@@ -117,7 +116,6 @@ main {
     height: 150px;
     border-radius: 50%;
     background-color: white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .female-number {
@@ -167,12 +165,10 @@ main {
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .control-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .control-button:active {
@@ -330,7 +326,6 @@ main {
     padding: 20px;
     margin-bottom: 30px;
     background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     display: block !important; /* 强制显示 */
     position: relative;
     z-index: 1;
@@ -379,7 +374,6 @@ main {
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     animation: slideIn 0.3s ease-out;
     margin-bottom: 8px;
     border-left: 4px solid #ff4d7e;
@@ -411,7 +405,6 @@ main {
         top: 5vh;
         left: 25%;
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
     
     .settings-title {
