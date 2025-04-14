@@ -23,12 +23,12 @@
         
         /* 记录容器样式 */
         .records-container {
-            margin-top: 40px;
+            margin-top: 20px;
             width: 90%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 10px 20px 40px 20px;
         }
         
         .records-header {
@@ -75,6 +75,9 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             display: inline-flex;
             align-items: center;
+            min-width: 70px;
+            justify-content: center;
+            margin: 3px;
         }
         
         .record-heart {
@@ -369,6 +372,24 @@
                 
                 .settings-title {
                     margin-bottom: 30px;
+                }
+                
+                /* 超宽屏下记录容器优化 */
+                .records-container {
+                    margin-top: 10px;
+                    padding-bottom: 60px;
+                    max-width: 80%;
+                }
+                
+                .records-list {
+                    max-height: 200px;
+                    overflow-y: auto;
+                    justify-content: flex-start;
+                    padding: 10px;
+                }
+                
+                .record-item {
+                    margin: 5px;
                 }
             }
         }
