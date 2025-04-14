@@ -437,6 +437,82 @@
                 }
             }
         }
+        
+        /* 结果容器弹窗样式 */
+        .result-container {
+            height: auto;
+            max-height: 80vh;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-y: auto;
+            z-index: 1000;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 弹窗标题 */
+        .result-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        /* 弹窗操作按钮容器 */
+        .result-actions {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* 弹窗关闭按钮 */
+        .result-close-btn, .result-clear-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .result-close-btn {
+            background-color: #4785ba;
+            color: white;
+        }
+        
+        .result-clear-btn {
+            background-color: #ff4d7e;
+            color: white;
+        }
+        
+        .result-close-btn:hover, .result-clear-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* 结果内容区域 */
+        .result-content {
+            width: 100%;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
     </style>
 </head>
 <body>
@@ -460,7 +536,14 @@
             </div>
 
             <div class="result-container" id="result-container" style="display: none;">
-                <div class="result-text" id="result-text"></div>
+                <div class="result-title">抽取结果</div>
+                <div class="result-content">
+                    <div class="result-text" id="result-text"></div>
+                </div>
+                <div class="result-actions">
+                    <button class="result-clear-btn" onclick="resetRecords()">清除记录</button>
+                    <button class="result-close-btn" onclick="closeResultModal()">关闭</button>
+                </div>
             </div>
             
             <div class="controls">
@@ -701,12 +784,16 @@
                     
                     // 暂停1秒后显示结果
                     setTimeout(() => {
-                        // 显示结果容器，背景轻微透明
-                        document.querySelector('.lottery-container').style.opacity = '0.3';
+                        // 显示结果容器
                         resultContainer.style.display = 'flex';
                         
-                        // 创建心形符号
-                        resultText.innerHTML = `${state.selectedFemale} <span style="color: #ff4d7e;">❤</span> ${state.selectedMale}`;
+                        // 创建心形符号 - 使用batch-results格式显示单组结果
+                        resultText.innerHTML = `
+                        <div class="batch-results">
+                            <div class="batch-result-item">
+                                ${state.selectedFemale}<span style="color: #ff4d7e; margin: 0 3px; font-weight: bold;">❤</span>${state.selectedMale}
+                            </div>
+                        </div>`;
                         
                         // 恢复按钮状态
                         controlButton.disabled = false;
@@ -735,9 +822,8 @@
                     state.selectedFemale = null;
                     state.selectedMale = null;
                     
-                    // 重置UI
-                    document.querySelector('.lottery-container').style.opacity = '1';
-                    resultContainer.style.display = 'none';
+                    // 关闭结果容器
+                    closeResultModal();
                     
                     // 自动开始新的滚动
                     handleControlButtonClick();
@@ -797,7 +883,6 @@
             
             femaleNumber.textContent = '1';
             maleNumber.textContent = '1';
-            document.querySelector('.lottery-container').style.opacity = '1';
             resultContainer.style.display = 'none';
             
             // 重置按钮
@@ -842,7 +927,6 @@
                 
                 femaleNumber.textContent = '1';
                 maleNumber.textContent = '1';
-                document.querySelector('.lottery-container').style.opacity = '1';
                 resultContainer.style.display = 'none';
                 document.getElementById('records-container').style.display = 'none';
                 
@@ -950,7 +1034,6 @@
                     renderRecords();
                     
                     // 显示结果容器
-                    document.querySelector('.lottery-container').style.opacity = '0.3';
                     resultContainer.style.display = 'flex';
                     document.getElementById('result-text').innerHTML = resultHTML;
                     
@@ -972,6 +1055,13 @@
             const settings = JSON.parse(localStorage.getItem('matchingLotterySettings')) || {};
             const batchCount = settings.batchCount || 3;
             document.getElementById('batch-button').textContent = `抽${batchCount}组`;
+        }
+        
+        // 关闭结果弹窗
+        function closeResultModal() {
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.style.display = 'none';
+            document.querySelector('.lottery-container').style.opacity = '1';
         }
     </script>
 </body>
