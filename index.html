@@ -38,6 +38,8 @@
             justify-content: center;
             width: 100%;
             max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
         }
         
         .record-item {
@@ -400,8 +402,7 @@
             
             <div class="controls">
                 <button id="control-button" class="control-button" onclick="handleControlButtonClick()">开始</button>
-                <button id="reset-button" class="reset-button" onclick="resetAll()" style="display: none;">重新开始</button>
-                <button id="clear-records-button" class="reset-button" onclick="resetRecords()" style="display: none;">重置记录</button>
+                <button id="reset-button" class="reset-button" onclick="resetAllAndRecords()" style="display: none;">重新开始</button>
             </div>
             
             <div id="records-container" class="records-container" style="display: none;">
@@ -507,12 +508,10 @@
             
             if (matchRecords.length === 0) {
                 document.getElementById('records-container').style.display = 'none';
-                document.getElementById('clear-records-button').style.display = 'none';
                 return;
             }
             
             document.getElementById('records-container').style.display = 'flex';
-            document.getElementById('clear-records-button').style.display = 'inline-block';
             
             for (const record of matchRecords) {
                 const recordItem = document.createElement('div');
@@ -702,6 +701,42 @@
                 }
             }
             return available;
+        }
+        
+        // 重新开始并重置记录
+        function resetAllAndRecords() {
+            if (confirm('确定要重新开始并清除所有抽取记录吗？')) {
+                // 重置抽取记录
+                matchRecords = [];
+                usedFemaleNumbers = new Set();
+                usedMaleNumbers = new Set();
+                saveRecordsToCache();
+                
+                // 重置状态
+                state = {
+                    rolling: false,
+                    rollInterval: null,
+                    selectedFemale: null,
+                    selectedMale: null,
+                    step: 0
+                };
+                
+                // 重置UI
+                const femaleNumber = document.getElementById('female-number');
+                const maleNumber = document.getElementById('male-number');
+                const resultContainer = document.getElementById('result-container');
+                const controlButton = document.getElementById('control-button');
+                
+                femaleNumber.textContent = '1';
+                maleNumber.textContent = '1';
+                document.querySelector('.lottery-container').style.opacity = '1';
+                resultContainer.style.display = 'none';
+                document.getElementById('records-container').style.display = 'none';
+                
+                // 重置按钮
+                controlButton.textContent = '开始';
+                document.getElementById('reset-button').style.display = 'none';
+            }
         }
     </script>
 </body>
