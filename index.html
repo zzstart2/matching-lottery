@@ -741,6 +741,7 @@
             loadRecordsFromCache();
             updateBatchButtonText();
             applyFontSizeSettings();
+            loadSettings();
         };
         
         // 应用字体大小设置
@@ -1211,6 +1212,32 @@
         function closeResultModal() {
             const resultContainer = document.getElementById('result-container');
             resultContainer.style.display = 'none';
+        }
+
+        // 从缓存加载设置
+        function loadSettings() {
+            const settingsStr = localStorage.getItem('lotterySettings');
+            if (settingsStr) {
+                const settings = JSON.parse(settingsStr);
+                
+                if (settings.femaleRange) {
+                    femaleRange = settings.femaleRange;
+                    document.getElementById('female-min').value = femaleRange[0];
+                    document.getElementById('female-max').value = femaleRange[1];
+                }
+                
+                if (settings.maleRange) {
+                    maleRange = settings.maleRange;
+                    document.getElementById('male-min').value = maleRange[0];
+                    document.getElementById('male-max').value = maleRange[1];
+                }
+                
+                if (settings.batchCount) {
+                    document.getElementById('batch-count').value = settings.batchCount;
+                    // 更新批量抽取按钮文本
+                    document.getElementById('batch-button').textContent = `抽${settings.batchCount}组`;
+                }
+            }
         }
     </script>
 </body>
