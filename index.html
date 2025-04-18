@@ -516,7 +516,7 @@
         .settings-panel {
             position: fixed;
             width: 70%;
-            height: 80vh;
+            height: 85vh; /* 稍微增加高度 */
             left: 15%;
             top: 50%;
             transform: translateY(-50%);
@@ -530,13 +530,13 @@
         }
         
         .settings-title {
-            font-size: 3.5rem !important;
+            font-size: 2.8rem !important; /* 减小标题 */
             font-weight: bold;
             color: #333;
             width: 100%;
             text-align: center;
             border-bottom: 1px solid #eee;
-            padding: 20px 0;
+            padding: 15px 0; /* 减小标题内边距 */
             margin: 0;
             background-color: white;
             position: sticky;
@@ -548,37 +548,40 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
-            align-items: center;
+            align-items: flex-start;
+            overflow-y: auto;
+            max-height: calc(85vh - 140px); /* 适应新的高度和标题大小 */
+            padding: 15px 0;
         }
         
         .settings-item {
-            margin-bottom: 30px;
-            font-size: 2rem;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
             padding: 0 15px;
             box-sizing: border-box;
             width: 80%;
         }
         
         .settings-item input {
-            width: 150px;
-            height: 60px;
-            font-size: 2rem;
+            width: 120px;
+            height: 50px;
+            font-size: 1.8rem;
             text-align: center;
         }
         
         .range-separator {
-            font-size: 2rem;
-            margin: 0 20px;
+            font-size: 1.8rem;
+            margin: 0 15px;
         }
         
         .settings-buttons {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 20px;
             position: sticky;
             bottom: 0;
             background-color: white;
-            padding: 20px 0;
+            padding: 15px 0;
             border-top: 1px solid #eee;
             margin: 0;
             z-index: 5;
@@ -586,9 +589,9 @@
         }
         
         .save-button, .cancel-button {
-            padding: 15px 40px;
-            font-size: 1.8rem;
-            border-radius: 10px;
+            padding: 10px 30px;
+            font-size: 1.5rem;
+            border-radius: 8px;
             cursor: pointer;
             border: none;
         }
@@ -606,7 +609,8 @@
         /* 排除号码相关样式 */
         .excluded-settings {
             width: 90% !important;
-            margin-top: 20px;
+            margin-top: 10px;
+            margin-bottom: 60px; /* 确保底部有足够空间 */
             padding: 15px;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
@@ -615,14 +619,14 @@
         .excluded-inputs {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin: 15px 0;
+            gap: 10px;
+            margin: 10px 0;
         }
         
         .exclude-number-section, .exclude-pair-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -630,16 +634,16 @@
         .exclude-number-section select, 
         .exclude-number-section input,
         .exclude-pair-section input {
-            font-size: 1.5rem;
-            padding: 8px;
+            font-size: 1.3rem;
+            padding: 6px;
             border-radius: 5px;
             border: 1px solid #ddd;
         }
         
         .exclude-number-section button, 
         .exclude-pair-section button {
-            font-size: 1.5rem;
-            padding: 8px 15px;
+            font-size: 1.3rem;
+            padding: 6px 12px;
             border-radius: 5px;
             background-color: #4785ba;
             color: white;
@@ -648,8 +652,8 @@
         }
         
         .excluded-list {
-            margin-top: 15px;
-            max-height: 200px;
+            margin-top: 10px;
+            max-height: 150px;
             overflow-y: auto;
             border: 1px solid #eee;
             padding: 10px;
