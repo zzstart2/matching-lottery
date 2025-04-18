@@ -603,6 +603,116 @@
             color: white;
         }
         
+        /* 排除号码相关样式 */
+        .excluded-settings {
+            width: 90% !important;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+        
+        .excluded-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .exclude-number-section, .exclude-pair-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .exclude-number-section select, 
+        .exclude-number-section input,
+        .exclude-pair-section input {
+            font-size: 1.5rem;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .exclude-number-section button, 
+        .exclude-pair-section button {
+            font-size: 1.5rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #4785ba;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .excluded-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .no-excluded {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 10px;
+        }
+        
+        .excluded-section {
+            margin-bottom: 15px;
+        }
+        
+        .excluded-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .excluded-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .excluded-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .female-item {
+            border-left: 3px solid #ff7b8a;
+        }
+        
+        .male-item {
+            border-left: 3px solid #4a9dcf;
+        }
+        
+        .pair-item {
+            border-left: 3px solid #9575cd;
+        }
+        
+        .delete-excluded {
+            background: none;
+            border: none;
+            color: #f44336;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        
         /* 结果项样式 */
         .result-item {
             display: flex;
@@ -717,6 +827,31 @@
                     <label>一次抽取组数</label>
                     <input type="number" id="batch-count" min="1" max="99" value="3">
                 </div>
+                
+                <div class="settings-item excluded-settings">
+                    <label>排除特定号码</label>
+                    <div class="excluded-inputs">
+                        <div class="exclude-number-section">
+                            <select id="exclude-gender">
+                                <option value="female">女生</option>
+                                <option value="male">男生</option>
+                            </select>
+                            <input type="number" id="exclude-number" min="1" placeholder="号码">
+                            <button onclick="addExcludedNumber()">添加</button>
+                        </div>
+                        
+                        <div class="exclude-pair-section">
+                            <input type="number" id="exclude-female" min="1" placeholder="女生号码">
+                            <span>+</span>
+                            <input type="number" id="exclude-male" min="1" placeholder="男生号码">
+                            <button onclick="addExcludedPair()">添加</button>
+                        </div>
+                    </div>
+                    
+                    <div id="excluded-list" class="excluded-list">
+                        <div class="no-excluded">暂无排除的号码</div>
+                    </div>
+                </div>
             </div>
             
             <div class="settings-buttons">
@@ -742,10 +877,17 @@
         // 已抽取的女生和男生号码
         let usedFemaleNumbers = new Set();
         let usedMaleNumbers = new Set();
+        // 用于存储被排除的号码组合
+        let excludedNumbers = {
+            female: new Set(),  // 排除的女生号码
+            male: new Set(),    // 排除的男生号码
+            pairs: []           // 排除的特定组合 [{female: 数字, male: 数字}]
+        };
         
         // 页面加载时从localStorage加载记录和更新批量按钮文本
         window.onload = function() {
             loadRecordsFromCache();
+            loadExcludedNumbersFromCache();
             updateBatchButtonText();
             applyFontSizeSettings();
             loadSettings();
@@ -772,6 +914,211 @@
                     });
                 }
             }
+        }
+        
+        // 从缓存加载排除的号码
+        function loadExcludedNumbersFromCache() {
+            const savedExcluded = localStorage.getItem('matchingLotteryExcluded');
+            if (savedExcluded) {
+                try {
+                    const parsed = JSON.parse(savedExcluded);
+                    
+                    // 重建排除的号码集合
+                    excludedNumbers = {
+                        female: new Set(parsed.female || []),
+                        male: new Set(parsed.male || []),
+                        pairs: parsed.pairs || []
+                    };
+                    
+                    // 更新UI显示
+                    renderExcludedNumbers();
+                } catch (e) {
+                    console.error('无法加载排除号码:', e);
+                }
+            }
+        }
+        
+        // 保存排除的号码到缓存
+        function saveExcludedNumbersToCache() {
+            const toSave = {
+                female: Array.from(excludedNumbers.female),
+                male: Array.from(excludedNumbers.male),
+                pairs: excludedNumbers.pairs
+            };
+            localStorage.setItem('matchingLotteryExcluded', JSON.stringify(toSave));
+        }
+        
+        // 渲染排除的号码列表
+        function renderExcludedNumbers() {
+            const excludedList = document.getElementById('excluded-list');
+            if (!excludedList) return;
+            
+            excludedList.innerHTML = '';
+            
+            // 如果没有排除的号码，显示提示信息
+            if (excludedNumbers.female.size === 0 && 
+                excludedNumbers.male.size === 0 && 
+                excludedNumbers.pairs.length === 0) {
+                excludedList.innerHTML = '<div class="no-excluded">暂无排除的号码</div>';
+                return;
+            }
+            
+            // 添加排除的女生号码
+            if (excludedNumbers.female.size > 0) {
+                const femaleSection = document.createElement('div');
+                femaleSection.className = 'excluded-section';
+                femaleSection.innerHTML = `<div class="excluded-title female-color">排除的女生号码</div>`;
+                
+                const femaleNumbers = Array.from(excludedNumbers.female).sort((a, b) => a - b);
+                const femaleList = document.createElement('div');
+                femaleList.className = 'excluded-numbers';
+                
+                femaleNumbers.forEach(num => {
+                    const item = document.createElement('div');
+                    item.className = 'excluded-item female-item';
+                    item.innerHTML = `
+                        <span>${formatNumberToThreeDigits(num)}</span>
+                        <button class="delete-excluded" data-gender="female" data-number="${num}">×</button>
+                    `;
+                    femaleList.appendChild(item);
+                });
+                
+                femaleSection.appendChild(femaleList);
+                excludedList.appendChild(femaleSection);
+            }
+            
+            // 添加排除的男生号码
+            if (excludedNumbers.male.size > 0) {
+                const maleSection = document.createElement('div');
+                maleSection.className = 'excluded-section';
+                maleSection.innerHTML = `<div class="excluded-title male-color">排除的男生号码</div>`;
+                
+                const maleNumbers = Array.from(excludedNumbers.male).sort((a, b) => a - b);
+                const maleList = document.createElement('div');
+                maleList.className = 'excluded-numbers';
+                
+                maleNumbers.forEach(num => {
+                    const item = document.createElement('div');
+                    item.className = 'excluded-item male-item';
+                    item.innerHTML = `
+                        <span>${formatNumberToThreeDigits(num)}</span>
+                        <button class="delete-excluded" data-gender="male" data-number="${num}">×</button>
+                    `;
+                    maleList.appendChild(item);
+                });
+                
+                maleSection.appendChild(maleList);
+                excludedList.appendChild(maleSection);
+            }
+            
+            // 添加排除的特定组合
+            if (excludedNumbers.pairs.length > 0) {
+                const pairsSection = document.createElement('div');
+                pairsSection.className = 'excluded-section';
+                pairsSection.innerHTML = `<div class="excluded-title">排除的特定组合</div>`;
+                
+                const pairsList = document.createElement('div');
+                pairsList.className = 'excluded-numbers';
+                
+                excludedNumbers.pairs.forEach((pair, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'excluded-item pair-item';
+                    item.innerHTML = `
+                        <span><span class="female-color">${formatNumberToThreeDigits(pair.female)}</span> + <span class="male-color">${formatNumberToThreeDigits(pair.male)}</span></span>
+                        <button class="delete-excluded" data-type="pair" data-index="${index}">×</button>
+                    `;
+                    pairsList.appendChild(item);
+                });
+                
+                pairsSection.appendChild(pairsList);
+                excludedList.appendChild(pairsSection);
+            }
+            
+            // 添加删除按钮的事件监听
+            const deleteButtons = document.querySelectorAll('.delete-excluded');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    
+                    if (type === 'pair') {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        excludedNumbers.pairs.splice(index, 1);
+                    } else {
+                        const gender = this.getAttribute('data-gender');
+                        const number = parseInt(this.getAttribute('data-number'));
+                        
+                        if (gender === 'female') {
+                            excludedNumbers.female.delete(number);
+                        } else if (gender === 'male') {
+                            excludedNumbers.male.delete(number);
+                        }
+                    }
+                    
+                    // 保存并重新渲染
+                    saveExcludedNumbersToCache();
+                    renderExcludedNumbers();
+                });
+            });
+        }
+        
+        // 添加排除号码
+        function addExcludedNumber() {
+            const gender = document.getElementById('exclude-gender').value;
+            const number = parseInt(document.getElementById('exclude-number').value);
+            
+            if (isNaN(number) || number < 1) {
+                alert('请输入有效的号码！');
+                return;
+            }
+            
+            // 添加到对应的排除集合
+            if (gender === 'female') {
+                excludedNumbers.female.add(number);
+            } else if (gender === 'male') {
+                excludedNumbers.male.add(number);
+            }
+            
+            // 保存并更新显示
+            saveExcludedNumbersToCache();
+            renderExcludedNumbers();
+            
+            // 清空输入框
+            document.getElementById('exclude-number').value = '';
+        }
+        
+        // 添加排除组合
+        function addExcludedPair() {
+            const femaleNumber = parseInt(document.getElementById('exclude-female').value);
+            const maleNumber = parseInt(document.getElementById('exclude-male').value);
+            
+            if (isNaN(femaleNumber) || femaleNumber < 1 || isNaN(maleNumber) || maleNumber < 1) {
+                alert('请输入有效的号码组合！');
+                return;
+            }
+            
+            // 检查是否已存在该组合
+            const existingPair = excludedNumbers.pairs.find(
+                pair => pair.female === femaleNumber && pair.male === maleNumber
+            );
+            
+            if (existingPair) {
+                alert('该组合已在排除列表中！');
+                return;
+            }
+            
+            // 添加新组合
+            excludedNumbers.pairs.push({
+                female: femaleNumber,
+                male: maleNumber
+            });
+            
+            // 保存并更新显示
+            saveExcludedNumbersToCache();
+            renderExcludedNumbers();
+            
+            // 清空输入框
+            document.getElementById('exclude-female').value = '';
+            document.getElementById('exclude-male').value = '';
         }
         
         // 从缓存加载记录
@@ -905,9 +1252,9 @@
                     controlButton.textContent = '停止';
                     
                     state.rollInterval = setInterval(() => {
-                        // 获取未使用的可用号码范围
-                        const availableFemale = getAvailableNumbers(settings.femaleRange.min, settings.femaleRange.max, usedFemaleNumbers);
-                        const availableMale = getAvailableNumbers(settings.maleRange.min, settings.maleRange.max, usedMaleNumbers);
+                        // 获取未使用的可用号码范围，同时排除指定的号码
+                        const availableFemale = getAvailableNumbersWithExclusion(settings.femaleRange.min, settings.femaleRange.max, usedFemaleNumbers, 'female');
+                        const availableMale = getAvailableNumbersWithExclusion(settings.maleRange.min, settings.maleRange.max, usedMaleNumbers, 'male');
                         
                         // 检查是否还有可用号码
                         if (availableFemale.length === 0 || availableMale.length === 0) {
@@ -922,6 +1269,12 @@
                         // 随机选择未使用的号码
                         const femaleRandomNumber = availableFemale[Math.floor(Math.random() * availableFemale.length)];
                         const maleRandomNumber = availableMale[Math.floor(Math.random() * availableMale.length)];
+                        
+                        // 检查是否是排除的组合
+                        if (isPairExcluded(femaleRandomNumber, maleRandomNumber)) {
+                            // 如果是排除的组合，不显示，继续随机
+                            return;
+                        }
                         
                         // 格式化为三位数
                         femaleNumber.textContent = formatNumberToThreeDigits(femaleRandomNumber);
@@ -1072,6 +1425,27 @@
             return available;
         }
         
+        // 获取未使用的可用号码，同时排除指定的号码
+        function getAvailableNumbersWithExclusion(min, max, usedNumbers, gender) {
+            const available = [];
+            const excludedSet = gender === 'female' ? excludedNumbers.female : excludedNumbers.male;
+            
+            for (let i = min; i <= max; i++) {
+                if (!usedNumbers.has(i) && !excludedSet.has(i)) {
+                    available.push(i);
+                }
+            }
+            
+            return available;
+        }
+        
+        // 检查一对号码是否在排除列表中
+        function isPairExcluded(femaleNumber, maleNumber) {
+            return excludedNumbers.pairs.some(pair => 
+                pair.female === femaleNumber && pair.male === maleNumber
+            );
+        }
+        
         // 重新开始并重置记录
         function resetAllAndRecords() {
             if (confirm('确定要重新开始并清除所有抽取记录吗？')) {
@@ -1119,8 +1493,8 @@
             };
             
             // 获取未使用的可用号码范围
-            const availableFemale = getAvailableNumbers(batchSettings.femaleRange.min, batchSettings.femaleRange.max, usedFemaleNumbers);
-            const availableMale = getAvailableNumbers(batchSettings.maleRange.min, batchSettings.maleRange.max, usedMaleNumbers);
+            const availableFemale = getAvailableNumbersWithExclusion(batchSettings.femaleRange.min, batchSettings.femaleRange.max, usedFemaleNumbers, 'female');
+            const availableMale = getAvailableNumbersWithExclusion(batchSettings.maleRange.min, batchSettings.maleRange.max, usedMaleNumbers, 'male');
             
             // 检查是否有足够的可用号码
             if (availableFemale.length < batchSettings.batchCount || availableMale.length < batchSettings.batchCount) {
@@ -1144,16 +1518,19 @@
             function startRollingNumbers(onComplete) {
                 let rollingInterval = setInterval(() => {
                     // 获取所有未使用的号码范围（不考虑本次批量已选的号码）
-                    const availableFemale = getAvailableNumbers(batchSettings.femaleRange.min, batchSettings.femaleRange.max, usedFemaleNumbers);
-                    const availableMale = getAvailableNumbers(batchSettings.maleRange.min, batchSettings.maleRange.max, usedMaleNumbers);
+                    const availableFemale = getAvailableNumbersWithExclusion(batchSettings.femaleRange.min, batchSettings.femaleRange.max, usedFemaleNumbers, 'female');
+                    const availableMale = getAvailableNumbersWithExclusion(batchSettings.maleRange.min, batchSettings.maleRange.max, usedMaleNumbers, 'male');
                     
                     // 随机选择号码
                     const randomFemale = availableFemale[Math.floor(Math.random() * availableFemale.length)];
                     const randomMale = availableMale[Math.floor(Math.random() * availableMale.length)];
                     
-                    // 显示当前随机号码
-                    femaleNumber.textContent = formatNumberToThreeDigits(randomFemale);
-                    maleNumber.textContent = formatNumberToThreeDigits(randomMale);
+                    // 如果是排除的组合，跳过显示
+                    if (!isPairExcluded(randomFemale, randomMale)) {
+                        // 显示当前随机号码
+                        femaleNumber.textContent = formatNumberToThreeDigits(randomFemale);
+                        maleNumber.textContent = formatNumberToThreeDigits(randomMale);
+                    }
                 }, 50);
                 
                 // 1秒后停止滚动并显示实际结果
@@ -1171,10 +1548,31 @@
             const tempUsedFemale = new Set([...usedFemaleNumbers]);
             const tempUsedMale = new Set([...usedMaleNumbers]);
             
-            for (let i = 0; i < batchSettings.batchCount; i++) {
+            // 尝试生成所需数量的有效组合
+            let attemptsCount = 0;
+            const maxAttempts = batchSettings.batchCount * 10; // 设置最大尝试次数，避免无限循环
+            
+            while (matches.length < batchSettings.batchCount && attemptsCount < maxAttempts) {
+                attemptsCount++;
+                
                 // 获取当前可用号码
-                const currentAvailableFemale = getAvailableNumbers(batchSettings.femaleRange.min, batchSettings.femaleRange.max, tempUsedFemale);
-                const currentAvailableMale = getAvailableNumbers(batchSettings.maleRange.min, batchSettings.maleRange.max, tempUsedMale);
+                const currentAvailableFemale = getAvailableNumbersWithExclusion(
+                    batchSettings.femaleRange.min, 
+                    batchSettings.femaleRange.max, 
+                    tempUsedFemale,
+                    'female'
+                );
+                const currentAvailableMale = getAvailableNumbersWithExclusion(
+                    batchSettings.maleRange.min, 
+                    batchSettings.maleRange.max, 
+                    tempUsedMale,
+                    'male'
+                );
+                
+                // 如果没有足够的可用号码，跳出循环
+                if (currentAvailableFemale.length === 0 || currentAvailableMale.length === 0) {
+                    break;
+                }
                 
                 // 随机选择号码
                 const femaleIndex = Math.floor(Math.random() * currentAvailableFemale.length);
@@ -1182,6 +1580,11 @@
                 
                 const femaleNumber = currentAvailableFemale[femaleIndex];
                 const maleNumber = currentAvailableMale[maleIndex];
+                
+                // 检查是否是排除的组合
+                if (isPairExcluded(femaleNumber, maleNumber)) {
+                    continue; // 如果是排除的组合，跳过并继续尝试
+                }
                 
                 // 添加到临时已使用集合
                 tempUsedFemale.add(femaleNumber);
@@ -1192,6 +1595,17 @@
                     female: femaleNumber,
                     male: maleNumber
                 });
+            }
+            
+            // 如果无法生成足够的组合，提示用户
+            if (matches.length < batchSettings.batchCount) {
+                alert(`由于排除限制，只能生成${matches.length}组有效配对。`);
+                // 如果一组都没有，直接返回
+                if (matches.length === 0) {
+                    batchButton.disabled = false;
+                    controlButton.disabled = false;
+                    return;
+                }
             }
             
             // 滚动显示
