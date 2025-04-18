@@ -515,9 +515,9 @@
         /* 设置面板样式 */
         .settings-panel {
             position: fixed;
-            width: 70%;
+            width: 90%; /* 增加宽度 */
             height: 85vh; /* 稍微增加高度 */
-            left: 15%;
+            left: 5%; /* 减少左侧间距 */
             top: 50%;
             transform: translateY(-50%);
             border-radius: 20px;
@@ -530,13 +530,13 @@
         }
         
         .settings-title {
-            font-size: 2.8rem !important; /* 减小标题 */
+            font-size: 2.5rem !important; /* 进一步减小标题 */
             font-weight: bold;
             color: #333;
             width: 100%;
             text-align: center;
             border-bottom: 1px solid #eee;
-            padding: 15px 0; /* 减小标题内边距 */
+            padding: 12px 0; /* 减小标题内边距 */
             margin: 0;
             background-color: white;
             position: sticky;
@@ -550,28 +550,33 @@
             justify-content: space-around;
             align-items: flex-start;
             overflow-y: auto;
-            max-height: calc(85vh - 140px); /* 适应新的高度和标题大小 */
-            padding: 15px 0;
+            max-height: calc(85vh - 125px); /* 适应新的高度和标题大小 */
+            padding: 10px 0;
         }
         
         .settings-item {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            padding: 0 15px;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+            padding: 0 10px;
             box-sizing: border-box;
-            width: 80%;
+            width: 48%; /* 改为两列布局 */
+        }
+        
+        /* 最后一个设置项(排除号码)单独占据整行 */
+        .settings-item:last-child {
+            width: 98%;
         }
         
         .settings-item input {
-            width: 120px;
-            height: 50px;
-            font-size: 1.8rem;
+            width: 80px;
+            height: 40px;
+            font-size: 1.6rem;
             text-align: center;
         }
         
         .range-separator {
-            font-size: 1.8rem;
-            margin: 0 15px;
+            font-size: 1.6rem;
+            margin: 0 10px;
         }
         
         .settings-buttons {
@@ -608,42 +613,64 @@
         
         /* 排除号码相关样式 */
         .excluded-settings {
-            width: 90% !important;
-            margin-top: 10px;
-            margin-bottom: 60px; /* 确保底部有足够空间 */
-            padding: 15px;
+            width: 98% !important;
+            margin: 5px auto 30px;
+            padding: 10px;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .excluded-settings > label {
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: 1.5rem;
+            padding-left: 5px;
         }
         
         .excluded-inputs {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 10px;
-            margin: 10px 0;
+            margin: 5px 0;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
         
         .exclude-number-section, .exclude-pair-section {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
+            gap: 5px;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            flex: 1;
+            min-width: 280px;
         }
         
         .exclude-number-section select, 
         .exclude-number-section input,
         .exclude-pair-section input {
-            font-size: 1.3rem;
-            padding: 6px;
+            font-size: 1.1rem;
+            padding: 4px 6px;
             border-radius: 5px;
             border: 1px solid #ddd;
+            flex: 0 0 auto;
+        }
+        
+        .exclude-number-section input,
+        .exclude-pair-section input {
+            width: 70px;
+        }
+        
+        .exclude-number-section select {
+            width: 80px;
         }
         
         .exclude-number-section button, 
         .exclude-pair-section button {
-            font-size: 1.3rem;
-            padding: 6px 12px;
+            font-size: 1.1rem;
+            padding: 4px 8px;
             border-radius: 5px;
             background-color: #4785ba;
             color: white;
@@ -652,48 +679,58 @@
         }
         
         .excluded-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-top: 10px;
             max-height: 150px;
             overflow-y: auto;
             border: 1px solid #eee;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.8);
         }
         
         .no-excluded {
+            width: 100%;
             text-align: center;
             color: #888;
             font-style: italic;
-            padding: 10px;
+            padding: 8px;
         }
         
         .excluded-section {
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-right: 15px;
+            margin-bottom: 10px;
+            flex: 0 0 auto;
         }
         
         .excluded-title {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 8px;
-            padding-bottom: 5px;
+            margin-bottom: 5px;
+            padding-bottom: 3px;
             border-bottom: 1px solid #eee;
         }
         
         .excluded-numbers {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 6px;
         }
         
         .excluded-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 5px;
+            gap: 3px;
+            padding: 3px 6px;
+            border-radius: 4px;
             background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
         }
         
         .female-item {
@@ -848,7 +885,7 @@
                             <input type="number" id="exclude-female" min="1" placeholder="女生号码">
                             <span>+</span>
                             <input type="number" id="exclude-male" min="1" placeholder="男生号码">
-                            <button onclick="addExcludedPair()">添加</button>
+                            <button onclick="addExcludedPair()">添加组合</button>
                         </div>
                     </div>
                     
